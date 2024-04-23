@@ -16,5 +16,12 @@ pub fn str_function(a: String) -> (String, String) {
     (a, String::from(second.trim()))
 }
 
-// pub fn vec_function(b: Vec<i32>) -> (Vec<i32>, Vec<f64>) {
-// }
+pub fn vec_function(b: Vec<i32>) -> (Vec<i32>, Vec<f64>) {
+    let mut my_vector : Vec<f64> = Vec::new();
+    
+    for vecteur in b.clone(){
+        my_vector.push((vecteur as f64).ln());
+    }
+
+    (b, my_vector)
+}

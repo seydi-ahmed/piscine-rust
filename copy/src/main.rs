@@ -7,5 +7,5 @@ fn main() {
 
     println!("{:?}", nbr_function(a));
     println!("{:?}", str_function(b));
-    // println!("{:?}", vec_function(c));
+    println!("{:?}", vec_function(c));
 }
