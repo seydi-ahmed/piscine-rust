@@ -1,5 +1,5 @@
 pub fn nbr_function(c: i32) -> (i32, f64, f64) {
-    (c, (c as f64).exp(), (c as f64).log10())
+    (c, (c as f64).exp(), (c as f64).abs().ln())
 }
 
 pub fn str_function(a: String) -> (String, String) {
