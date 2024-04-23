@@ -29,7 +29,7 @@ pub fn delete_and_backspace(s: &mut String) -> Vec<String> {
 
     for mut i in 0.._taille-2{
         if trouve{
-            i -= 1;
+            i = 0;
         }
         if tab_vector[i] == "-"{
             tab_vector = delete_function(tab_vector, i-1);
