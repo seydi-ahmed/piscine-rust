@@ -23,17 +23,17 @@ pub fn string_to_vec(s: String) -> Vec<String> {
 pub fn delete_and_backspace(s: &mut String) -> Vec<String> {
 
     let mut tab_vector : Vec<String> = string_to_vec(s.to_string());
-    let _taille : usize = tab_vector.len()-2;
+    let _taille : usize = tab_vector.len()-1;
 
     let mut trouve : bool = false;
 
-    for mut i in 0.._taille-2{
-        if trouve{
+    for mut i in 0.._taille-3{
+        if trouve == true{
             i = 0;
         }
         if tab_vector[i] == "-"{
-            tab_vector = delete_function(tab_vector, i-1);
             tab_vector = delete_function(tab_vector, i);
+            tab_vector = delete_function(tab_vector, i-1);
             trouve = true;
         } else {
             trouve = false;
