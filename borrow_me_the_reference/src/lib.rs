@@ -1,48 +1,67 @@
-pub fn delete_function(v: Vec<String>, index: usize) -> Vec<String> {
-    let mut index2: usize = 0;
-    let mut v2: Vec<String> = Vec::new();
+pub fn delete_and_backspace(s: &mut String) {
+    let mut result = String::new();
+    let mut ignore_next = false;
 
-    for letter in v {
-        if index != index2 {
-            v2.push(letter);
+    for c in s.chars() {
+        match c {
+            '-' => {
+                result.pop(); // Remove the last character if it's a backspace
+            }
+            '+' => {
+                ignore_next = true; // Set flag to ignore the next character if it's a delete
+            }
+            _ => {
+                if !ignore_next {
+                    result.push(c); // Add the character to the result unless it's flagged to be ignored
+                } else {
+                    ignore_next = false; // Reset the flag if the character is not ignored
+                }
+            }
         }
-        index2 += 1;
     }
-    v2
+
+    *s = result; // Update the original string with the processed result
 }
 
-pub fn string_to_vec(s: String) -> Vec<String> {
-    let mut s1: Vec<String> = Vec::new();
 
-    for letter in s.chars() {
-        s1.push(letter.to_string());
+pub fn do_operations(v: &mut Vec<String>) {
+    for equation in v.iter_mut() {
+        let result: i32 = eval(equation); // Evaluate the equation
+        *equation = result.to_string(); // Update the equation with the result
     }
-    s1
 }
 
-pub fn delete_and_backspace(s: &mut String) -> Vec<String> {
+// Helper function to evaluate simple addition and subtraction equations
+fn eval(equation: &String) -> i32 {
+    let mut result = 0;
+    let mut operator = '+';
+    let mut num = String::new();
 
-    let mut tab_vector : Vec<String> = string_to_vec(s.to_string());
-    let _taille : usize = tab_vector.len()-1;
-
-    let mut trouve : bool = false;
-
-    for mut i in 0.._taille-3{
-        if trouve == true{
-            i = 0;
-        }
-        if tab_vector[i] == "-"{
-            tab_vector = delete_function(tab_vector, i);
-            tab_vector = delete_function(tab_vector, i-1);
-            trouve = true;
+    for c in equation.chars() {
+        if c.is_numeric() {
+            num.push(c); // Add numeric characters to num
         } else {
-            trouve = false;
+            if !num.is_empty() {
+                // Perform addition or subtraction based on the previous operator
+                let n: i32 = num.parse().unwrap();
+                match operator {
+                    '+' => result += n,
+                    '-' => result -= n,
+                    _ => (),
+                }
+                num.clear(); // Clear num for the next number
+            }
+            operator = c; // Update operator
         }
     }
 
-    tab_vector
+    // Perform the last addition or subtraction with the remaining number
+    let n: i32 = num.parse().unwrap();
+    match operator {
+        '+' => result += n,
+        '-' => result -= n,
+        _ => (),
+    }
+
+    result
 }
-
-// pub fn do_operations(v: &mut Vec<String>) {
-// }
-
