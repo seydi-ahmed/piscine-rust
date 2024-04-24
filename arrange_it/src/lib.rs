@@ -64,25 +64,18 @@ pub fn arrange_phrase(phrase: &str) -> String {
 
     // Sort the words based on the position number within each word
     words.sort_by_key(|word| {
-        // Find the position number in the word
+        // Extract the position number from the word and convert it to a numeric value
         let pos = word.chars().find(|c| c.is_numeric()).unwrap();
-        pos.to_digit(10).unwrap() // Convert the digit character to a numeric value
+        let pos_num = pos.to_digit(10).unwrap();
+        (pos_num, word.to_string()) // Sort by position number and word itself
     });
 
+    // Remove the position numbers from each word
+    let words_no_digits: Vec<String> = words.iter().map(|word| {
+        word.chars().filter(|&c| !c.is_numeric()).collect()
+    }).collect();
+
     // Join the sorted words into a single string
-    let result = words.join(" ");
-    // result
-
-    let result = result.replace("1", "");
-    let result = result.replace("2", "");
-    let result = result.replace("3", "");
-    let result = result.replace("4", "");
-    let result = result.replace("5", "");
-    let result = result.replace("6", "");
-    let result = result.replace("7", "");
-    let result = result.replace("8", "");
-    let result = result.replace("9", "");
-
-    let rst : String = result.trim().to_string();
-    rst
+    let result = words_no_digits.join(" ");
+    result
 }
