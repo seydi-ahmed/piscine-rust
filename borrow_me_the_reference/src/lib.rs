@@ -44,7 +44,7 @@ pub fn delete_and_backspace(s: &mut String) {
     let _s1 = String::from(s.to_string());
     let mut tab_vec: Vec<String> = str_to_vec(_s1);
     let mut parcours: usize = 0;
-    let mut taille_vec: usize = tab_vec.len() - 1;
+    let mut taille_vec: usize = tab_vec.len();
 
     while parcours < taille_vec {
         if tab_vec[parcours] == "-" {
@@ -60,7 +60,7 @@ pub fn delete_and_backspace(s: &mut String) {
     let mut tab_vec2 = tab_vec.iter().rev().collect::<Vec<&String>>();
 
     let mut parcours2: usize = 0;
-    let mut taille_vec2: usize = tab_vec2.len() - 1;
+    let mut taille_vec2: usize = tab_vec2.len();
 
     while parcours2 < taille_vec2 {
         if tab_vec2[parcours2] == "+" {
