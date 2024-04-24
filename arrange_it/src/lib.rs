@@ -70,18 +70,12 @@ pub fn arrange_phrase(phrase: &str) -> String {
     });
 
     // Join the sorted words into a single string
-    let result = words.join(" ");
+    let mut result = words.join(" ");
     // result
 
-    let result = result.replace("1", "");
-    let result = result.replace("2", "");
-    let result = result.replace("3", "");
-    let result = result.replace("4", "");
-    let result = result.replace("5", "");
-    let result = result.replace("6", "");
-    let result = result.replace("7", "");
-    let result = result.replace("8", "");
-    let result = result.replace("9", "");
+    for c in "123456789".chars() {
+        result = result.replace(c, "");
+    }
 
     let rst : String = result.trim().to_string();
     rst
