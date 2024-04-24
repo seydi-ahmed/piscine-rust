@@ -46,8 +46,9 @@ pub fn delete_and_backspace(s: &mut String) {
     let mut parcours: usize = 0;
     let mut taille_vec: usize = tab_vec.len();
 
+    // ENLEVER LES SIGNES "-"
     while parcours < taille_vec {
-        if tab_vec[parcours] == "-" {
+        if tab_vec[parcours] == "-" && parcours != 0{
             tab_vec = delete_string_on_vec(tab_vec, parcours);
             tab_vec = delete_string_on_vec(tab_vec, parcours - 1);
             taille_vec -= 2;
@@ -59,11 +60,12 @@ pub fn delete_and_backspace(s: &mut String) {
 
     let mut tab_vec2 = tab_vec.iter().rev().collect::<Vec<&String>>();
 
+    // ENLEVER LES SIGNES "+"
     let mut parcours2: usize = 0;
     let mut taille_vec2: usize = tab_vec2.len();
 
     while parcours2 < taille_vec2 {
-        if tab_vec2[parcours2] == "+" {
+        if tab_vec2[parcours2] == "+" && parcours2 != 0{
             tab_vec2 = delete_string_on_vec2(tab_vec2, parcours2);
             tab_vec2 = delete_string_on_vec2(tab_vec2, parcours2 - 1);
             taille_vec2 -= 2;
