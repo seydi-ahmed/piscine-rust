@@ -85,20 +85,6 @@ pub fn delete_and_backspace(s: &mut String) {
     }
 }
 
-// pub fn do_operations(v: &mut Vec<String>) {
-//     let mut v1 : Vec<String> = Vec::new();
-
-//     for letter in v{
-//         v1.push(letter.to_string());
-//     }
-
-//     for letter in v1{
-//         let tab_un_a_un : 
-//     }
-
-// }
-
-
 // ***************************************************************************************
 
 pub fn do_operations(v: &mut Vec<String>) {
