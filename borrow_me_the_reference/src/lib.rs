@@ -74,7 +74,6 @@ pub fn delete_and_backspace(s: &mut String) {
     }
     
     let tab_vec3 = tab_vec2.iter().rev().collect::<Vec<&&String>>();
-    println!("{:?}", tab_vec3);
 
 
     s.clear();
