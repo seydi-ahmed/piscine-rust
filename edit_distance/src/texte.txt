@@ -1,1 +1,21 @@
 https://www.geeksforgeeks.org/edit-distance-dp-5/
+
+    Initialisation des variables :
+        La fonction prend deux chaînes de caractères en entrée : source et target.
+        Elle crée une matrice dp de taille (source.len() + 1) x (target.len() + 1) pour stocker les résultats intermédiaires du calcul de la distance d'édition.
+
+    Initialisation de la première ligne et de la première colonne de la matrice dp :
+        La première colonne de dp représente les transformations nécessaires pour convertir une chaîne vide en la sous-chaîne de source.
+        La première ligne de dp représente les transformations nécessaires pour convertir la sous-chaîne de source en une chaîne vide.
+        Les valeurs de la première colonne sont simplement les indices, c'est-à-dire le nombre d'insertions nécessaires pour transformer une chaîne vide en une sous-chaîne de source.
+        Les valeurs de la première ligne sont également les indices, c'est-à-dire le nombre de suppressions nécessaires pour transformer une sous-chaîne de source en une chaîne vide.
+
+    Calcul de la distance d'édition :
+        La fonction itère à travers chaque caractère de source et de target.
+        Pour chaque paire de caractères, elle compare les caractères.
+        Si les caractères sont identiques, elle copie simplement la valeur de la diagonale précédente dans dp.
+        Sinon, elle prend le minimum entre les trois valeurs adjacentes (haut, gauche et diagonale) dans dp, puis elle ajoute 1.
+        La valeur finale de dp[source.len()][target.len()] représente le nombre minimum de changements nécessaires pour transformer toute la chaîne source en la chaîne target.
+
+    Retourne la distance d'édition :
+        La fonction renvoie la valeur stockée dans dp[source.len()][target.len()], qui représente le nombre minimum de changements nécessaires pour transformer toute la chaîne source en la chaîne target.
