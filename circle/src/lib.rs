@@ -32,7 +32,7 @@ impl Circle {
     pub fn intersect(&self, cercle2: &Circle) -> bool{
         let somme_des_rayons : f64 = self.radius + cercle2.radius;
         let distance_des_centres : f64 = self.center.distance(&cercle2.center);
-        if distance_des_centres < somme_des_rayons{
+        if distance_des_centres <= somme_des_rayons{
             return true;
         }
         false
