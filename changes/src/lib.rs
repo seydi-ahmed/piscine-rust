@@ -16,5 +16,10 @@ impl Light {
 	}
 }
 
-// pub fn change_brightness(lights: &mut Vec<Light>, alias: &str, value: u8) {
-// }
+pub fn change_brightness(lights: &mut Vec<Light>, alias: &str, value: u8) {
+	for eclairage in lights{
+		if eclairage.alias == alias {
+			eclairage.brightness = value;
+		}
+	}
+}
