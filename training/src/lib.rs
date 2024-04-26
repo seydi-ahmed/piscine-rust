@@ -32,22 +32,81 @@ pub fn reverse_it(v: i32) -> String {
 // *************************************
 
 use std::collections::HashMap;
-
 pub fn counting_words(words: &str) -> HashMap<String, u32> {
     let mut word_count: HashMap<String, u32> = HashMap::new();
 
-    // Remove punctuation except for apostrophes
     let words = words.replace(|c: char| !c.is_alphanumeric() && c != '\'', " ");
 
-    // Split the string into words by whitespace
     for word in words.split_whitespace() {
-        // Convert the word to lowercase
         let word = word.to_lowercase();
-        // Increment the count for this word in the HashMap
+
         *word_count.entry(word).or_insert(0) += 1;
     }
 
     word_count
+}
+
+// *************************************
+
+pub fn parts_sums(arr: &[u64]) -> Vec<u64> {
+    let mut sums = vec![0; arr.len() + 1];
+    
+    for i in 0..arr.len() {
+        sums[i + 1] = sums[i] + arr[i];
+    }
+    
+    sums.reverse();
+
+    sums
+}
+
+// *************************************
+
+pub fn next_prime(nbr: u64) -> u64 {
+    let mut num = nbr;
+
+    while !is_prime(num) {
+        num += 1;
+    }
+    
+    num
+}
+
+fn is_prime(n: u64) -> bool {
+    if n <= 1 {
+        return false;
+    }
+    if n == 2 {
+        return true;
+    }
+    if n % 2 == 0 {
+        return false;
+    }
+
+    let mut i = 3;
+
+    while i * i <= n {
+        if n % i == 0 {
+            return false;
+        }
+        i += 2;
+    }
+    true
+}
+
+
+pub fn prev_prime(nbr: u64) -> u64 {
+    if nbr <= 2 {
+        return 0;
+    }
+    
+    let mut num = nbr;
+    
+    while !is_prime(num) {
+        num -= 1;
+    }
+    
+    num
 }
 
 // *************************************

@@ -1,8 +1,5 @@
-use training::counting_words;
+use training::*;
 
 fn main() {
-    println!("{:?}", counting_words("Hello, world!"));
-    println!("{:?}", counting_words("“Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.”
-    ― Albert Einstein "));
-    println!("{:?}", counting_words("Batman, BATMAN, batman, Stop stop"));
+    println!("The previous prime number before 34 is: {}", prev_prime(34));
 }
