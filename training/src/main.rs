@@ -1,5 +1,7 @@
 use training::*;
 
 fn main() {
-    println!("The previous prime number before 34 is: {}", prev_prime(34));
+    let args: Vec<String> = std::env::args().collect();
+
+    rpn(&args[1]);
 }
