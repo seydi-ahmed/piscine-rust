@@ -42,3 +42,8 @@ impl Error for ReadErr {
         Some(self.child_err.as_ref())
     }
 }
+
+
+// TodoList { title: "TODO LIST FOR PISCINE RUST", tasks: [Task { id: 0, description: "do this", level: 0 }, Task { id: 1, description: "do that", level: 5 }] }
+// Fail to parse todoNone
+// Fail to parse todo Some(Malformed(UnexpectedCharacter { ch: ',', line: 2, column: 18 }))
