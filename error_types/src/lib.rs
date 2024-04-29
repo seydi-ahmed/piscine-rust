@@ -68,7 +68,7 @@ impl Form {
             let err = FormError::new(
                 String::from("password"),
                 self.password.clone(),
-                String::from("Combination of different ASCII character types (numbers, letters and non-alphanumeric characters)"),
+                String::from("Combination of different ASCII character types (numbers, letters and none alphanumeric characters)"),
             );
             return Err(err);
         } else {
