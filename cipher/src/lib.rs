@@ -22,7 +22,7 @@ pub fn cipher(original: &str, ciphered: &str) -> Option<Result<bool, CipherError
     }
 
     if original_filtered.len() != ciphered_filtered.len() {
-        return Some(Err(CipherError::new(false, generate_expected(&original))));
+        return Some(Err(CipherError::new(false, generate_expected(&original, &ciphered))));
     }
 
     let mut result = true;
@@ -46,18 +46,23 @@ pub fn cipher(original: &str, ciphered: &str) -> Option<Result<bool, CipherError
     }
 }
 
-fn generate_expected(original: &str) -> String {
-    original
-        .chars()
-        .map(|c| {
-            if c.is_ascii_alphabetic() {
-                atbash(c)
+fn generate_expected(original: &str, ciphered: &str) -> String {
+    let mut expected = String::new();
+    let mut ciphered_chars = ciphered.chars();
+    for orig_char in original.chars() {
+        if orig_char.is_ascii_alphabetic() {
+            if let Some(_ciphered_char) = ciphered_chars.next() {
+                expected.push(atbash(orig_char));
             } else {
-                c
+                break;
             }
-        })
-        .collect()
+        } else {
+            expected.push(orig_char);
+        }
+    }
+    expected
 }
+
 
 
 
