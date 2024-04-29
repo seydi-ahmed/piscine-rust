@@ -48,7 +48,7 @@ impl Form {
 
     pub fn validate(&self) -> Result<Vec<&str>, FormError> {
         let mut errors = Vec::new();
-
+    
         // Validate first name
         if self.first_name.is_empty() {
             let err = FormError::new(String::from("first_name"), String::from(""), String::from("No user name"));
@@ -56,7 +56,7 @@ impl Form {
         } else {
             errors.push("Valid first name");
         }
-
+    
         // Validate password
         if self.password.len() < 8 {
             let err = FormError::new(String::from("password"), self.password.clone(), String::from("At least 8 characters"));
@@ -74,9 +74,10 @@ impl Form {
         } else {
             errors.push("Valid password");
         }
-
+    
         Ok(errors)
     }
+    
 }
 
 // Helper function to create NaiveDate from string
