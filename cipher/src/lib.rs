@@ -14,17 +14,25 @@ impl CipherError {
 }
 
 pub fn cipher(original: &str, ciphered: &str) -> Option<Result<bool, CipherError>> {
-    if original.is_empty() || ciphered.is_empty() {
+    let original_filtered: String = original.chars().filter(|&c| c.is_alphabetic()).collect();
+    let ciphered_filtered: String = ciphered.chars().filter(|&c| c.is_alphabetic()).collect();
+
+    if original_filtered.is_empty() || ciphered_filtered.is_empty() {
         return None;
     }
 
-
-    if original.len() != ciphered.len() {
-        return Some(Err(CipherError::new(false, ciphered.to_string())));
+    if original_filtered.len() != ciphered_filtered.len() {
+        return Some(Err(CipherError::new(false, generate_expected(&original))));
     }
 
     let mut result = true;
+    let mut expected = String::new();
     for (orig_char, ciphered_char) in original.chars().zip(ciphered.chars()) {
+        if orig_char.is_ascii_alphabetic() {
+            expected.push(atbash(orig_char));
+        } else {
+            expected.push(orig_char);
+        }
         if atbash(orig_char) != ciphered_char {
             result = false;
             break;
@@ -34,11 +42,26 @@ pub fn cipher(original: &str, ciphered: &str) -> Option<Result<bool, CipherError
     if result {
         Some(Ok(true))
     } else {
-        Some(Err(CipherError::new(false, ciphered.to_string())))
+        Some(Err(CipherError::new(false, expected)))
     }
 }
 
-fn atbash(c: char) -> char {
+fn generate_expected(original: &str) -> String {
+    original
+        .chars()
+        .map(|c| {
+            if c.is_ascii_alphabetic() {
+                atbash(c)
+            } else {
+                c
+            }
+        })
+        .collect()
+}
+
+
+
+pub fn atbash(c: char) -> char {
     match c {
         'a'..='z' => ('z' as u8 - (c as u8 - 'a' as u8)) as char,
         'A'..='Z' => ('Z' as u8 - (c as u8 - 'A' as u8)) as char,
@@ -46,3 +69,6 @@ fn atbash(c: char) -> char {
     }
 }
 
+// Some(Ok(true))
+// Some(Err(CipherError { validation: false, expected: "1Svool 2dliow!" }))
+// None
