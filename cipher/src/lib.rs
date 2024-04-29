@@ -6,11 +6,19 @@ pub struct CipherError {
 
 impl CipherError {
     pub fn new(validation: bool, expected: String) -> CipherError {
-        CipherError { validation, expected }
+        CipherError {
+            validation,
+            expected,
+        }
     }
 }
 
 pub fn cipher(original: &str, ciphered: &str) -> Option<Result<bool, CipherError>> {
+    if original.is_empty() || ciphered.is_empty() {
+        return None;
+    }
+
+
     if original.len() != ciphered.len() {
         return Some(Err(CipherError::new(false, ciphered.to_string())));
     }
@@ -38,6 +46,3 @@ fn atbash(c: char) -> char {
     }
 }
 
-// Some(Ok(true))
-// Some(Err(CipherError { validation: false, expected: "1Svool 2dliow!" }))
-// None
