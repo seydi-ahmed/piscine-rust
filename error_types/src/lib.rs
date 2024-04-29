@@ -78,6 +78,7 @@ impl Form {
         Ok(errors)
     }
     
+    
 }
 
 // Helper function to create NaiveDate from string
@@ -85,11 +86,3 @@ pub fn create_date(date: &str) -> NaiveDate {
     NaiveDate::parse_from_str(date, "%Y-%m-%d").unwrap()
 }
 
-
-
-// Form { first_name: "Lee", last_name: "Silva", birth: 2015-09-05, birth_location: "Africa", password: "qwqwsa1dty_" }
-// ["Valid first name", "Valid password"]
-// FormError { form_values: ("first_name", ""), date: "2022-10-17 12:09:25", err: "No user name" }
-// FormError { form_values: ("password", "dty_1"), date: "2022-10-17 12:09:25", err: "At least 8 characters" }
-// FormError { form_values: ("password", "asdasASd(_"), date: "2022-10-17 12:09:25", err: "Combination of different ASCII character types (numbers, letters and none alphanumeric characters)" }
-// FormError { form_values: ("password", "asdasASd123SA"), date: "2022-10-17 12:09:25", err: "Combination of different ASCII character types (numbers, letters and none alphanumeric characters)" }
