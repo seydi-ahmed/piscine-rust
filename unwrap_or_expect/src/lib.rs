@@ -11,7 +11,7 @@ pub fn fetch_data(server: Result<String, String>, security_level: Security) -> S
         Security::Unknown => server.expect(""),
         Security::High => {
             if let Err(_err) = server {
-                panic!("ERROR CRITICAL");
+                panic!("ERROR: program stops");
             } else {
                 server.unwrap()
             }
