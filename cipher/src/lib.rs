@@ -51,7 +51,7 @@ fn generate_expected(original: &str, ciphered: &str) -> String {
     let mut ciphered_chars = ciphered.chars();
     for orig_char in original.chars() {
         if orig_char.is_ascii_alphabetic() {
-            if let Some(_ciphered_char) = ciphered_chars.next() {
+            if let Some(ciphered_char) = ciphered_chars.next() {
                 expected.push(atbash(orig_char));
             } else {
                 break;
@@ -60,8 +60,11 @@ fn generate_expected(original: &str, ciphered: &str) -> String {
             expected.push(orig_char);
         }
     }
+    // Ajouter le reste de la chaîne chiffrée s'il en reste
+    expected.push_str(&ciphered_chars.collect::<String>());
     expected
 }
+
 
 
 
