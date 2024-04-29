@@ -14,59 +14,43 @@ impl CipherError {
 }
 
 pub fn cipher(original: &str, ciphered: &str) -> Option<Result<bool, CipherError>> {
+    // Filtrer les caractères alphabétiques de la chaîne originale et chiffrée
     let original_filtered: String = original.chars().filter(|&c| c.is_alphabetic()).collect();
     let ciphered_filtered: String = ciphered.chars().filter(|&c| c.is_alphabetic()).collect();
 
+    // Vérifier si les chaînes filtrées sont vides
     if original_filtered.is_empty() || ciphered_filtered.is_empty() {
         return None;
     }
 
+    // Vérifier si les chaînes filtrées ont la même longueur
     if original_filtered.len() != ciphered_filtered.len() {
-        return Some(Err(CipherError::new(false, generate_expected(&original, &ciphered))));
+        return Some(Err(CipherError::new(false, generate_expected(original))));
     }
 
-    let mut result = true;
-    let mut expected = String::new();
-    for (orig_char, ciphered_char) in original.chars().zip(ciphered.chars()) {
-        if orig_char.is_ascii_alphabetic() {
-            expected.push(atbash(orig_char));
-        } else {
-            expected.push(orig_char);
-        }
-        if atbash(orig_char) != ciphered_char {
-            result = false;
-            break;
-        }
-    }
+    // Appliquer le chiffrement à la chaîne d'origine et comparer avec la chaîne chiffrée fournie
+    let result = original_filtered.chars().map(atbash).collect::<String>() == ciphered_filtered;
 
     if result {
         Some(Ok(true))
     } else {
-        Some(Err(CipherError::new(false, expected)))
+        Some(Err(CipherError::new(false, generate_expected(original))))
     }
 }
 
-fn generate_expected(original: &str, ciphered: &str) -> String {
-    let mut expected = String::new();
-    let mut ciphered_chars = ciphered.chars();
-    for orig_char in original.chars() {
-        if orig_char.is_ascii_alphabetic() {
-            if let Some(ciphered_char) = ciphered_chars.next() {
-                expected.push(atbash(orig_char));
+
+fn generate_expected(original: &str) -> String {
+    original
+        .chars()
+        .map(|c| {
+            if c.is_ascii_alphabetic() {
+                atbash(c)
             } else {
-                break;
+                c
             }
-        } else {
-            expected.push(orig_char);
-        }
-    }
-    // Ajouter le reste de la chaîne chiffrée s'il en reste
-    expected.push_str(&ciphered_chars.collect::<String>());
-    expected
+        })
+        .collect()
 }
-
-
-
 
 
 pub fn atbash(c: char) -> char {
