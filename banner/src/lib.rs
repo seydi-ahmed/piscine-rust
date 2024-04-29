@@ -32,7 +32,7 @@ impl FlagsHandler {
         match self.flags.get(&flag) {
             Some(callback) => match callback(argv[0], argv[1]) {
                 Ok(result) => result,
-                Err(err) => format!("Error: {}", err),
+                Err(err) => format!("{}", err),
             },
             None => "Flag not found".to_string(),
         }
