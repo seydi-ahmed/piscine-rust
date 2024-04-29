@@ -1,9 +1,16 @@
 use std::fmt;
 use std::error::Error;
+use std::fmt::Display;
 
+#[derive(Debug)]
 pub enum ParseErr {
     Empty,
     Malformed(Box<dyn Error>),
+}
+
+#[derive(Debug)]
+pub struct ReadErr {
+    pub child_err: Box<dyn Error>,
 }
 
 impl Display for ParseErr {
@@ -13,10 +20,6 @@ impl Display for ParseErr {
             ParseErr::Malformed(_) => write!(f, "Fail to parse todo"),
         }
     }
-}
-
-pub struct ReadErr {
-    pub child_err: Box<dyn Error>,
 }
 
 impl Display for ReadErr {
