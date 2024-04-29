@@ -1,29 +1,31 @@
-use chrono::{Utc, NaiveDate};
+use chrono::{NaiveDate, Utc};
 
-#[derive(Debug, Eq, PartialEq, Clone)] // Ajoutez `Clone` ici
+// Error type for form validation
+#[derive(Debug, Eq, PartialEq)]
 pub struct FormError {
-    form_values: (String, String),
-    date: String,
-    err: String,
+    pub form_values: (String, String),
+    pub date: String,
+    pub err: String,
 }
 
 impl FormError {
     pub fn new(field_name: String, field_value: String, err: String) -> FormError {
         FormError {
             form_values: (field_name, field_value),
-            date: Utc::now().to_string(),
+            date: Utc::now().format("%Y-%m-%d %H:%M:%S").to_string(),
             err,
         }
     }
 }
 
+// Structure to handle form data
 #[derive(Debug, Eq, PartialEq)]
 pub struct Form {
-    first_name: String,
-    last_name: String,
-    birth: NaiveDate,
-    birth_location: String,
-    password: String,
+    pub first_name: String,
+    pub last_name: String,
+    pub birth: NaiveDate,
+    pub birth_location: String,
+    pub password: String,
 }
 
 impl Form {
@@ -42,29 +44,50 @@ impl Form {
             password,
         }
     }
+
     pub fn validate(&self) -> Result<Vec<&str>, FormError> {
         let mut errors = Vec::new();
 
         // Validate first name
         if self.first_name.is_empty() {
-            errors.push(FormError::new("first_name".to_string(), self.first_name.clone(), "No user name".to_string()));
+            let err = FormError::new(String::from("first_name"), String::from(""), String::from("No user name"));
+            return Err(err);
         } else {
-            errors.push(FormError::new("first_name".to_string(), self.first_name.clone(), "Valid first name".to_string()));
+            errors.push("Valid first name");
         }
 
         // Validate password
         if self.password.len() < 8 {
-            errors.push(FormError::new("password".to_string(), self.password.clone(), "At least 8 characters".to_string()));
-        } else if !self.password.chars().any(char::is_numeric) || !self.password.chars().any(char::is_alphabetic) || self.password.chars().all(char::is_alphanumeric) {
-            errors.push(FormError::new("password".to_string(), self.password.clone(), "Combination of different ASCII character types (numbers, letters and none alphanumeric characters)".to_string()));
+            let err = FormError::new(String::from("password"), self.password.clone(), String::from("At least 8 characters"));
+            return Err(err);
+        } else if !self.password.chars().any(|c| c.is_numeric())
+            || !self.password.chars().any(|c| c.is_alphabetic())
+            || !self.password.chars().any(|c| !c.is_alphanumeric())
+        {
+            let err = FormError::new(
+                String::from("password"),
+                self.password.clone(),
+                String::from("Combination of different ASCII character types (numbers, letters and non-alphanumeric characters)"),
+            );
+            return Err(err);
         } else {
-            errors.push(FormError::new("password".to_string(), self.password.clone(), "Valid password".to_string()));
+            errors.push("Valid password");
         }
 
-        if errors.is_empty() {
-            Ok(errors.into_iter().map(|s| s.err.as_str()).collect())
-        } else {
-            Err(errors[0].clone())
-        }
+        Ok(errors)
     }
 }
+
+// Helper function to create NaiveDate from string
+pub fn create_date(date: &str) -> NaiveDate {
+    NaiveDate::parse_from_str(date, "%Y-%m-%d").unwrap()
+}
+
+
+
+// Form { first_name: "Lee", last_name: "Silva", birth: 2015-09-05, birth_location: "Africa", password: "qwqwsa1dty_" }
+// ["Valid first name", "Valid password"]
+// FormError { form_values: ("first_name", ""), date: "2022-10-17 12:09:25", err: "No user name" }
+// FormError { form_values: ("password", "dty_1"), date: "2022-10-17 12:09:25", err: "At least 8 characters" }
+// FormError { form_values: ("password", "asdasASd(_"), date: "2022-10-17 12:09:25", err: "Combination of different ASCII character types (numbers, letters and none alphanumeric characters)" }
+// FormError { form_values: ("password", "asdasASd123SA"), date: "2022-10-17 12:09:25", err: "Combination of different ASCII character types (numbers, letters and none alphanumeric characters)" }
