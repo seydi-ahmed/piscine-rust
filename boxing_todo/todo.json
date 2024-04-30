@@ -1,8 +1,0 @@
-{
-    "title": "TODO LIST FOR PISCINE RUST",
-    "tasks": [
-      { "id": 0, "description": "Faire les exercices de Rust", "level": 2 },
-      { "id": 1, "description": "Lire le livre sur Rust", "level": 3 }
-    ]
-  }
-  

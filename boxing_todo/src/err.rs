@@ -1,6 +1,6 @@
 use std::fmt;
-use std::error::Error;
 use std::fmt::Display;
+use std::error::Error;
 
 #[derive(Debug)]
 pub enum ParseErr {
@@ -8,23 +8,9 @@ pub enum ParseErr {
     Malformed(Box<dyn Error>),
 }
 
-#[derive(Debug)]
-pub struct ReadErr {
-    pub child_err: Box<dyn Error>,
-}
-
-impl Display for ParseErr {
+impl std::fmt::Display for ParseErr {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            ParseErr::Empty => write!(f, "Fail to parse todo"),
-            ParseErr::Malformed(_) => write!(f, "Fail to parse todo"),
-        }
-    }
-}
-
-impl Display for ReadErr {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Fail to read todo file")
+        write!(f, "Fail to parse todo")
     }
 }
 
@@ -32,8 +18,19 @@ impl Error for ParseErr {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
         match self {
             ParseErr::Empty => None,
-            ParseErr::Malformed(err) => Some(err.as_ref()),
+            ParseErr::Malformed(_) => Some(self)
         }
+    }
+}
+
+#[derive(Debug)]
+pub struct ReadErr {
+    pub child_err: Box<dyn Error>,
+}
+
+impl Display for ReadErr {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "Fail to read todo file")
     }
 }
 
@@ -42,8 +39,3 @@ impl Error for ReadErr {
         Some(self.child_err.as_ref())
     }
 }
-
-
-// TodoList { title: "TODO LIST FOR PISCINE RUST", tasks: [Task { id: 0, description: "do this", level: 0 }, Task { id: 1, description: "do that", level: 5 }] }
-// Fail to parse todoNone
-// Fail to parse todo Some(Malformed(UnexpectedCharacter { ch: ',', line: 2, column: 18 }))

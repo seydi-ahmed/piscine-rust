@@ -6,13 +6,4 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-json = "0.12.4"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-
-[source.crates-io]
-registry = "https://github.com/rust-lang/crates.io-index"
-replace-with = 'sjtu-mirror'
-
-[source.sjtu-mirror]
-registry = "https://mirrors.sjtug.sjtu.edu.cn/git/crates.io-index.git"
+json = "=0.12.4"
