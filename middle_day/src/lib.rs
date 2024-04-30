@@ -1,6 +1,6 @@
-pub use chrono::{Datelike, NaiveDate, Weekday};
+pub use chrono::{Datelike, NaiveDate, Weekday as wd};
 
-pub fn middle_day(year: i32) -> Option<Weekday> {
+pub fn middle_day(year: i32) -> Option<wd> {
     let jours_dans_annee = if NaiveDate::from_ymd_opt(year,2,29).is_some(){
         366
     } else {
