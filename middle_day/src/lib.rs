@@ -10,11 +10,11 @@ pub fn middle_day(year: i32) -> Option<Weekday> {
     if days_in_year % 2 == 0 {
         return None;
     } else {
-        let middleDay = (days_in_year+1)/2;
-        let middleDate = match NaiveDate::from_ymd_opt(year, middleDay as u32){
+        let middleday = (days_in_year+1)/2;
+        let middle_date = match NaiveDate::from_yo_opt(year, middleday as u32){
             Some(d) => d,
             None => panic!("Invalid Date"),
         };
-        Some(middleDate.weekday())
+        Some(middle_date.weekday())
     }
 }
