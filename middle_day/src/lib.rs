@@ -18,3 +18,8 @@ pub fn middle_day(year: i32) -> Option<Weekday> {
     // Extraire le jour de la semaine de la date médiane, s'il existe
     middle_date.map(|date| date.weekday())
 }
+
+
+// $ cargo run
+// Tue
+// $
