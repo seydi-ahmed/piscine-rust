@@ -1,36 +1,29 @@
-mod areas_volumes;
-use areas_volumes::{GeometricalShapes, GeometricalVolumes};
+pub mod areas_volumes;
 
 pub fn area_fit(
     x: usize,
     y: usize,
-    objects: GeometricalShapes,
+    objects: areas_volumes::GeometricalShapes,
     times: usize,
     a: usize,
     b: usize,
 ) -> bool {
     match objects {
-        GeometricalShapes::Square => {
-            let area_per_object = a * a;
+        areas_volumes::GeometricalShapes::Square => {
+            let area_of_one = areas_volumes::square_area(a);
             let total_area = x * y;
-            area_per_object * times <= total_area
+            total_area / area_of_one >= times
         }
-        GeometricalShapes::Circle => {
-            // Utilisation de la moitié de la largeur ou de la hauteur du rectangle comme rayon
-            let radius = a.min(b);
-            let area_per_object = std::f64::consts::PI * (radius * radius) as f64;
+        areas_volumes::GeometricalShapes::Triangle => {
+            let area_of_one = areas_volumes::triangle_area(a, b);
             let total_area = x * y;
-            area_per_object * times as f64 <= total_area as f64
+            total_area as f64 / area_of_one >= times as f64
         }
-        GeometricalShapes::Rectangle => {
-            let area_per_object = a * b;
+        areas_volumes::GeometricalShapes::Circle => false,
+        areas_volumes::GeometricalShapes::Rectangle => {
+            let area_of_one = areas_volumes::rectangle_area(a, b);
             let total_area = x * y;
-            area_per_object * times <= total_area
-        }
-        GeometricalShapes::Triangle => {
-            let area_per_object = areas_volumes::triangle_area(a, b);
-            let total_area = x * y;
-            area_per_object * times as f64 <= total_area as f64
+            total_area / area_of_one >= times
         }
     }
 }
@@ -39,40 +32,25 @@ pub fn volume_fit(
     x: usize,
     y: usize,
     z: usize,
-    objects: GeometricalVolumes,
+    objects: areas_volumes::GeometricalVolumes,
     times: usize,
     a: usize,
     b: usize,
     c: usize,
 ) -> bool {
     match objects {
-        GeometricalVolumes::Cube => {
-            let volume_per_object = a * a * a;
+        areas_volumes::GeometricalVolumes::Cube => {
+            let volume_of_one = areas_volumes::cube_volume(a);
             let total_volume = x * y * z;
-            volume_per_object * times <= total_volume
+            total_volume / volume_of_one >= times
         }
-        GeometricalVolumes::Sphere => {
-            // Utilisation de la moitié de la largeur ou de la hauteur ou de la profondeur du cube comme rayon
-            let radius = a.min(b).min(c);
-            let volume_per_object = areas_volumes::sphere_volume(radius);
+        areas_volumes::GeometricalVolumes::Sphere => false,
+        areas_volumes::GeometricalVolumes::Cone => false,
+        areas_volumes::GeometricalVolumes::Pyramid => false,
+        areas_volumes::GeometricalVolumes::Parallelepiped => {
+            let volume_of_one = areas_volumes::parallelepiped_volume(a, b, c);
             let total_volume = x * y * z;
-            volume_per_object * times as f64 <= total_volume as f64
-        }
-        GeometricalVolumes::Cone => {
-            let volume_per_object = areas_volumes::cone_volume(a, b);
-            let total_volume = x * y * z;
-            volume_per_object * times as f64 <= total_volume as f64
-        }
-        GeometricalVolumes::Pyramid => {
-            let base_area = areas_volumes::triangle_area(a, b);
-            let volume_per_object = areas_volumes::triangular_pyramid_volume(base_area, c);
-            let total_volume = x * y * z;
-            volume_per_object * times as f64 <= total_volume as f64
-        }
-        GeometricalVolumes::Parallelepiped => {
-            let volume_per_object = areas_volumes::parallelepiped_volume(a, b, c);
-            let total_volume = x * y * z;
-            volume_per_object * times <= total_volume
+            total_volume / volume_of_one >= times
         }
     }
 }
