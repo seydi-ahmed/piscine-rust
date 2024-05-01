@@ -29,25 +29,25 @@
 // "Interesting"
 // "Just say something!"
 
-
 pub fn talking(text: &str) -> &str {
     // Check if the text is empty
     if text.trim().is_empty() {
         return "Just say something!";
     }
 
-    // Check if the text is a question
-    if text.trim_end().ends_with('?') {
-        if text == text.to_uppercase() {
+    // Check if the text is all uppercase
+    if text == text.to_uppercase() {
+        // Check if the text is a question
+        if text.trim_end().ends_with('?') {
             return "Quiet, I am thinking!";
         } else {
-            return "Sure.";
+            return "There is no need to yell, calm down!";
         }
     }
 
-    // Check if the text is all uppercase
-    if text == text.to_uppercase() {
-        return "There is no need to yell, calm down!";
+    // Check if the text is a question
+    if text.trim_end().ends_with('?') {
+        return "Sure.";
     }
 
     // Default response
