@@ -12,10 +12,10 @@ pub struct Food {
 }
 
 pub fn calculate_macros(foods: Vec<Food>) -> Value {
-    let mut total_calories = 0.0f64;
-    let mut total_carbs = 0.0f64;
-    let mut total_proteins = 0.0f64;
-    let mut total_fats = 0.0f64;
+    let mut total_calories = 0.0;
+    let mut total_carbs = 0.0;
+    let mut total_proteins = 0.0;
+    let mut total_fats = 0.0;
 
     for food in foods {
         // Parse calorie values from strings to f64
@@ -23,10 +23,9 @@ pub fn calculate_macros(foods: Vec<Food>) -> Value {
             .expect("Failed to parse calorie value");
         let calorie_kcal = f64::from_str(&food.calories[1][..food.calories[1].len() - 4])
             .expect("Failed to parse calorie value");
-        
-        // Calculate total calories considering portions
-        let total_calories_per_portion = (calorie_kj + calorie_kcal * 4.184) * food.nbr_of_portions;
-        total_calories += total_calories_per_portion;
+
+        // Convert kJ to kcal and sum up
+        total_calories += (calorie_kj / 4.184 + calorie_kcal) * food.nbr_of_portions;
 
         // Calculate total macros considering portions
         total_proteins += food.proteins * food.nbr_of_portions;
