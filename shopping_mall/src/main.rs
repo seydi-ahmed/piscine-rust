@@ -1,4 +1,8 @@
-use shopping_mall::*;
+pub mod mall;
+use crate::Store;
+// use crate::floor::store::Store;
+pub use mall::*;
+pub use shopping_mall::*;
 
 fn main() {
     let secs = vec![
