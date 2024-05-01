@@ -1,20 +1,35 @@
 pub fn talking(text: &str) -> &str {
-    // Vérifier si le texte est vide ou contient uniquement des espaces
+    // Check if the text is empty
     if text.trim().is_empty() {
         return "Just say something!";
     }
 
-    // Vérifier si le texte est tout en majuscules
-    let is_yelling = text.chars().all(|c| c.is_uppercase());
-
-    // Vérifier si le texte se termine par un point d'interrogation
-    let is_question = text.trim().ends_with('?');
-
-    // Retourner la réponse appropriée en fonction des conditions
-    match (is_yelling, is_question) {
-        (true, true) => "Quiet, I am thinking!",
-        (true, false) => "There is no need to yell, calm down!",
-        (false, true) => "Sure.",
-        _ => "Interesting",
+    if text == text.to_uppercase() {
+        // Check if the text is a question (ends with a question mark)
+        if text.ends_with('?') {
+            return "Quiet, I am thinking!";
+        } else {
+            return "There is no need to yell, calm down!";
+        }
     }
+
+    // Check if the text is a question
+    if text.trim_end().ends_with('?') {
+        return "Sure.";
+    }
+
+    // Default response
+    "Interesting"
 }
+
+
+
+
+
+
+
+// "There is no need to yell, calm down!"
+// "Sure."
+// "Quiet, I am thinking!"
+// "Interesting"
+// "Just say something!"
