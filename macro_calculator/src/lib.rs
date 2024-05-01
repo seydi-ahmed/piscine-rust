@@ -1,8 +1,4 @@
-extern crate json;
-
-pub use json::JsonValue;
-
-pub use json::*;
+pub use json:: {self,object};
 
 pub struct Food {
     pub name: String,
@@ -13,7 +9,7 @@ pub struct Food {
     pub nbr_of_portions: f64,
 }
 
-pub fn calculate_macros(foods: Vec<Food>) -> JsonValue {
+pub fn calculate_macros(foods: Vec<Food>) -> json::JsonValue {
     let mut total_cals = 0.0;
     let mut total_carbs = 0.0;
     let mut total_proteins = 0.0;
