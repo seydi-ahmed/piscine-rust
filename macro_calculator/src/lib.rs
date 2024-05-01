@@ -1,4 +1,8 @@
-use json::*;
+extern crate json;
+
+pub use json::JsonValue;
+
+pub use json::*;
 
 pub struct Food {
     pub name: String,
