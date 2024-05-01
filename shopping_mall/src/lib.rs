@@ -1,83 +1,83 @@
-mod mall;
+pub mod mall;
+pub use mall::floor::store;
+pub use mall::floor::*;
+pub use mall::*;
 
-use mall::*;
+pub fn biggest_store(m: Mall) -> floor::store::Store {
+    let mut list: Vec<store::Store> = Vec::new();
 
-pub fn biggest_store(mall: Mall) -> Option<floor::store::Store> {
-    let mut biggest_store: Option<floor::store::Store> = None;
-    let mut max_size = 0;
+    for f in m.floors {
+        for s in f.stores {
+            list.push(s);
+        }
+    }
 
-    for floor in mall.floors {
-        for store in floor.stores {
-            if store.square_meters > max_size {
-                max_size = store.square_meters;
-                biggest_store = Some(store.clone());
+    list.sort_unstable_by(|a, b| a.square_meters.cmp(&b.square_meters));
+    let biggest = &list[list.len() - 1];
+
+    biggest.clone()
+}
+
+pub fn highest_paid_employee(m: Mall) -> Vec<store::employee::Employee> {
+    let mut list: Vec<store::employee::Employee> = Vec::new();
+
+    for f in m.floors {
+        for s in f.stores {
+            for e in s.employees {
+                list.push(e);
             }
         }
     }
 
-    biggest_store
+    list.sort_unstable_by(|a, b| a.salary.partial_cmp(&b.salary).unwrap());
+
+    let highest = &list[list.len() - 1].salary;
+
+    list = list
+        .iter()
+        .map(|e| e.clone())
+        .filter(|s| s.salary == *highest)
+        .collect::<Vec<_>>();
+
+    list
 }
 
-pub fn highest_paid_employee(mall: Mall) -> Vec<floor::store::employee::Employee> {
-    let mut highest_paid_employees: Vec<floor::store::employee::Employee> = Vec::new();
-    let mut max_salary = 0.0;
+pub fn nbr_of_employees(m: Mall) -> usize {
+    let mut num_employees = m.guards.len();
 
-    for floor in mall.floors {
-        for store in floor.stores {
-            for employee in store.employees {
-                if employee.salary > max_salary {
-                    max_salary = employee.salary;
-                    highest_paid_employees.clear();
-                    highest_paid_employees.push(employee.clone());
-                } else if employee.salary == max_salary {
-                    highest_paid_employees.push(employee.clone());
-                }
-            }
+    for f in m.floors {
+        for s in f.stores {
+            num_employees += s.employees.len();
         }
     }
 
-    highest_paid_employees
+    num_employees
 }
 
-pub fn nbr_of_employees(mall: Mall) -> usize {
-    let mut total_employees = 0;
+pub fn check_for_securities(m: &mut Mall, guards: Vec<guard::Guard>) {
+    let mut num_areas = 0_u64;
 
-    for floor in mall.floors {
-        for store in floor.stores {
-            total_employees += store.employees.len();
-        }
+    for f in &m.floors {
+        num_areas += f.size_limit / 200_u64;
     }
 
-    total_employees
-}
+    let guards_to_add = m.guards.len().abs_diff(num_areas as usize);
 
-pub fn check_for_securities(mall: &mut Mall, new_guards: Vec<mall::guard::Guard>) {
-    let total_floor_size: u64 = mall.floors.iter().map(|floor| {
-        floor.stores.iter().map(|store| store.square_meters).sum::<u64>()
-    }).sum();
-
-    let required_guards = total_floor_size / 200;
-    let current_guards_count = mall.guards.len();
-
-    if current_guards_count < required_guards as usize {
-        for guard in new_guards {
-            mall.hire_guard(guard);
-        }
+    for i in 0..guards_to_add + 1 {
+        m.hire_guard(guards[i].clone());
     }
 }
 
-
-pub fn cut_or_raise(mall: &mut Mall) {
-    for floor in &mut mall.floors {
-        for store in &mut floor.stores {
-            for employee in &mut store.employees {
-                let working_hours = employee.working_hours;
-                let total_hours = working_hours.1 - working_hours.0;
-                let increase = if total_hours > 10 { 0.1 } else { -0.1 };
-                if increase > 0.0 {
-                    employee.raise(employee.salary * increase);
+pub fn cut_or_raise(m: &mut Mall) {
+    for f in &mut m.floors {
+        for s in &mut f.stores {
+            for e in &mut s.employees {
+                if e.working_hours.0.abs_diff(e.working_hours.1) > 10 {
+                    let rate = 0.1 * &e.salary;
+                    e.salary += rate;
                 } else {
-                    employee.cut(employee.salary * (-increase));
+                    let rate = 0.1 * &e.salary;
+                    e.salary -= rate;
                 }
             }
         }
