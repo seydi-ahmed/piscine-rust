@@ -1,6 +1,5 @@
-use does_it_fit::*;
-
-use areas_volumes::*;
+pub use does_it_fit::*;
+pub use areas_volumes::*;
 
 fn main() {
 	println!(
