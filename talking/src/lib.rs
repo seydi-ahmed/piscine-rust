@@ -14,7 +14,7 @@ pub fn talking(text: &str) -> &str {
     }
 
     // Check if the text is a question
-    if text.trim_end().ends_with('?') {
+    if text.ends_with('?') {
         return "Sure.";
     }
 
