@@ -21,13 +21,9 @@ pub fn talking(text: &str) -> &str {
     }
 
     // Check if the text is a question
-    for letter in text.chars(){
-        if letter == '?'{
-            return "Sure.";
-        }
+    if text.ends_with('?') {
+        return "Sure.";
     }
-    // if text.ends_with('?') {
-    // }
 
     // Default response
     "Interesting"
