@@ -29,7 +29,7 @@ pub fn edit_distance(source: &str, target: &str) -> usize {
 }
 
 pub fn expected_variable(compared: &str, expected: &str) -> Option<String> {
-    if !contains_lowercase_and_underscore(compared) && !contains_lowercase_and_underscore(expected) {
+    if !contains_lowercase_and_underscore(compared) || !contains_lowercase_and_underscore(expected) {
         return None;
     }
 
@@ -47,6 +47,7 @@ pub fn expected_variable(compared: &str, expected: &str) -> Option<String> {
         None
     }
 }
+
 
 
 fn contains_lowercase_and_underscore(s: &str) -> bool {
@@ -70,10 +71,3 @@ fn is_camel(s: &str) -> bool {
     // Vérifie s'il y a au moins une lettre minuscule
     s.chars().any(|c| c.is_ascii_lowercase())
 }
-
-
-
-// 100% close to it
-// 88% close to it
-// None
-// 67% close to it
