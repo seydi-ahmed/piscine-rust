@@ -7,7 +7,7 @@ pub struct Boss {
 impl Boss {
     pub fn new(name: &str, age: u8) -> Boss {
         Boss {
-            name: String::from(name),
+            name: name.to_string(),
             age,
         }
     }

@@ -1,10 +1,12 @@
 pub mod mobs;
-
 pub mod boss;
 pub mod member;
 
-use boss::Boss;
-use member::{Member, Role};
+// use crate::mobs::boss::Boss;
+// use crate::mobs::member::{Member, Role};
+
+use crate::boss::Boss;
+use crate::member::{Member, Role};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Mob {
@@ -57,7 +59,7 @@ impl Mob {
     }
 }
 
-fn mob_score(role: &Role) -> u8 {
+pub fn mob_score(role: &Role) -> u8 {
     match role {
         Role::Underboss => 4,
         Role::Caporegime => 3,
@@ -65,3 +67,5 @@ fn mob_score(role: &Role) -> u8 {
         Role::Associate => 1,
     }
 }
+
+
