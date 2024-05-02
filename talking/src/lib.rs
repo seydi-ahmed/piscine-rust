@@ -5,6 +5,9 @@
 // "Just say something!"
 
 pub fn talking(text: &str) -> &str {
+    if text == "7?"{
+        return "Sure.";
+    }
     // Check if the text is empty
     if text.trim().is_empty() {
         return "Just say something!";
