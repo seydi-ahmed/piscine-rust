@@ -29,7 +29,7 @@ pub fn edit_distance(source: &str, target: &str) -> usize {
 }
 
 pub fn expected_variable(compared: &str, expected: &str) -> Option<String> {
-    if !contains_lowercase_and_underscore(compared) || !contains_lowercase_and_underscore(expected) {
+    if !contains_lowercase_and_underscore(compared) && !contains_lowercase_and_underscore(expected) {
         return None;
     }
 
@@ -47,7 +47,6 @@ pub fn expected_variable(compared: &str, expected: &str) -> Option<String> {
         None
     }
 }
-
 
 
 fn contains_lowercase_and_underscore(s: &str) -> bool {
