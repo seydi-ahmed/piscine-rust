@@ -21,8 +21,10 @@ pub fn talking(text: &str) -> &str {
     }
 
     // Check if the text is a question
-    if text.trim().ends_with('?') {
-        return "Sure.";
+    if text != text.to_uppercase() {
+        if text.ends_with('?') {
+            return "Sure.";
+        }
     }
 
     // Default response
