@@ -1,6 +1,6 @@
 extern crate case;
 
-use case::CaseExt;
+pub use case::CaseExt;
 
 
 
@@ -28,17 +28,6 @@ pub fn edit_distance(source: &str, target: &str) -> usize {
     dp[source.len()][target.len()]
 }
 
-
-
-pub fn is_camel_case(s: &str) -> bool {
-    s.chars().any(|c| c.is_uppercase())
-}
-
-pub fn is_snake_case(s: &str) -> bool {
-    s.chars().any(|c| c == '_')
-}
-
-
 pub fn expected_variable(compared: &str, expected: &str) -> Option<String> {
     if !contains_lowercase_and_underscore(compared) && !contains_lowercase_and_underscore(expected) {
         return None;
@@ -47,18 +36,37 @@ pub fn expected_variable(compared: &str, expected: &str) -> Option<String> {
     let compared_snake_case = compared.to_lowercase().replace(" ", "_");
     let expected_snake_case = expected.to_lowercase().replace(" ", "_");
 
+    let distance = edit_distance(&compared_snake_case, &expected_snake_case);
     let max_length = compared_snake_case.len().max(expected_snake_case.len());
 
-    let distance = edit_distance(&compared_snake_case, &expected_snake_case);
-    let alikeness = 1.0 - (distance as f64 / max_length as f64);
-    
-    if alikeness > 0.5 {
-        Some(format!("{:.0}% close to it", alikeness * 100.0))
+    let similarity = 1.0 - (distance as f64 / max_length as f64);
+
+    if similarity > 0.5 {
+        Some(format!("{:.0}% close to it", similarity * 100.0))
     } else {
-        Some("None".to_string())
+        None
     }
 }
 
+
 fn contains_lowercase_and_underscore(s: &str) -> bool {
-    s.chars().any(|c| c.is_ascii_lowercase()) && s.contains('_')
+    is_snake(s) || is_camel(s)
+}
+
+fn is_snake(s: &str) -> bool {
+    // Vérifie si la chaîne contient uniquement des lettres minuscules, des chiffres et des traits de soulignement
+    s.chars().all(|c| c.is_ascii_lowercase() || c.is_digit(10) || c == '_') &&
+    // Vérifie si la chaîne ne commence ni ne se termine par un trait de soulignement
+    !s.starts_with('_') && !s.ends_with('_') &&
+    // Vérifie s'il y a au moins un trait de soulignement
+    s.contains('_')
+}
+
+fn is_camel(s: &str) -> bool {
+    // Vérifie si la chaîne commence par une lettre majuscule suivie de lettres minuscules ou des chiffres
+    s.chars().next().map_or(false, |c| c.is_ascii_uppercase()) &&
+    // Vérifie si la chaîne ne contient pas de traits de soulignement
+    !s.contains('_') &&
+    // Vérifie s'il y a au moins une lettre minuscule
+    s.chars().any(|c| c.is_ascii_lowercase())
 }
