@@ -9,3 +9,13 @@ fn main() {
     println!("{}", pig_latin(&String::from("chair")));
 	println!("{}", pig_latin(&String::from("queen")));
 }
+
+
+// iglooay
+// appleay
+// ellohay
+// aresquay
+// enonxay
+// airchay
+// eenquay
+

@@ -1,29 +1,81 @@
 pub fn pig_latin(text: &str) -> String {
     let vowels = ['a', 'e', 'i', 'o', 'u'];
-    let mut chars = text.chars();
-    
-    if let Some(first_char) = chars.next() {
-        if vowels.contains(&first_char) {
-            // If the word starts with a vowel, just add "ay" to the end.
-            return format!("{}ay", text);
+
+    let mut chars = text.chars().peekable();
+    let mut result = String::new();
+
+    // ******************************
+    let mut trouve : bool = false;
+    // Move consonants before the first vowel to the end and add "ay"
+    while let Some(&c) = chars.peek() {
+        if vowels.contains(&c) {
+            break;
+        }
+        trouve = true;
+        result.push(c);
+        chars.next(); // consume consonant
+    }
+    if trouve {
+        let rest_of_word: String = chars.collect();
+        result.push_str(&rest_of_word);
+        result.push_str("ay");
+        return result;
+    }
+
+    // ******************************
+
+    // Check if the word starts with "qu"
+    if text.starts_with("qu") {
+        result.push_str(&text[2..]); // Skip the 'q' and 'u'
+        result.push_str("quay");
+        return result;
+    }
+
+    // Check if the word starts with a consonant followed by "qu"
+    let mut consonants_before_qu = String::new();
+    while let Some(&c) = chars.peek() {
+        if !vowels.contains(&c) && c != 'q' {
+            consonants_before_qu.push(c);
+            chars.next(); // consume consonant
         } else {
-            // Find the position of the first vowel.
-            let first_vowel_index = text.find(|c: char| vowels.contains(&c)).unwrap_or(text.len());
-            
-            if text[first_vowel_index..].starts_with("qu") {
-                // If the word starts with a consonant followed by "qu", move "qu" to the end.
-                let prefix = &text[..first_vowel_index + 1];
-                let suffix = &text[first_vowel_index + 1..];
-                return format!("{}{}ay", suffix, prefix);
-            } else {
-                // If it starts with a consonant, move consonants before the first vowel to the end.
-                let prefix = &text[..first_vowel_index];
-                let suffix = &text[first_vowel_index..];
-                return format!("{}{}ay", suffix, prefix);
-            }
+            break;
         }
     }
-    
-    // If the input is empty, return it as is.
-    text.to_string()
+
+    if let Some('q') = chars.peek() {
+        chars.next(); // consume 'q'
+        if let Some('u') = chars.peek() {
+            chars.next(); // consume 'u'
+            let rest_of_word: String = chars.collect();
+            result.push_str(&rest_of_word);
+            result.push_str(&consonants_before_qu);
+            result.push_str("quay");
+            return result;
+        }
+    }
+
+    // If the first character is a vowel, just add "ay" to the end
+    if let Some(&c) = chars.peek() {
+        if vowels.contains(&c) {
+            result.push_str(text);
+            result.push_str("ay");
+            return result;
+        }
+    }
+
+    // Move consonants before the first vowel to the end and add "ay"
+    let mut consonants = String::new();
+    while let Some(&c) = chars.peek() {
+        if vowels.contains(&c) {
+            break;
+        }
+        consonants.push(c);
+        chars.next(); // consume consonant
+    }
+    let rest_of_word: String = chars.collect();
+    result.push_str(&rest_of_word);
+    result.push_str(&consonants);
+    result.push_str("ay");
+
+    result
 }
