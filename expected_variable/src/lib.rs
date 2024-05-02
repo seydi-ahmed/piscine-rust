@@ -1,8 +1,5 @@
 extern crate case;
-
 pub use case::CaseExt;
-
-
 
 pub fn edit_distance(source: &str, target: &str) -> usize {
     let mut dp = vec![vec![0; target.len() + 1]; source.len() + 1];
