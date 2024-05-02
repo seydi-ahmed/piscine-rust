@@ -8,23 +8,38 @@ pub struct Color {
 
 impl Color {
     pub fn swap(mut self, first: u8, second: u8) -> Color {
-        // Vérifiez d'abord si les valeurs fournies sont valides
-        if first > 3 || second > 3 {
-            panic!("Invalid color component index");
-        }
+        let color = self.clone();
 
-        // Utilisez un modèle de correspondance pour échanger les valeurs
-        match (first, second) {
-            (0, 1) => { let temp = self.r; self.r = self.g; self.g = temp; },
-            (0, 2) => { let temp = self.r; self.r = self.b; self.b = temp; },
-            (0, 3) => { let temp = self.r; self.r = self.a; self.a = temp; },
-            (1, 2) => { let temp = self.g; self.g = self.b; self.b = temp; },
-            (1, 3) => { let temp = self.g; self.g = self.a; self.a = temp; },
-            (2, 3) => { let temp = self.b; self.b = self.a; self.a = temp; },
-            // Si les indices sont les mêmes, il n'y a pas besoin d'échanger, donc retournez simplement la couleur inchangée
-            _ => {},
-        }
-        
-        self // Retourne la couleur modifiée
+        let (r, g, b, a) = (color.r, color.g, color.b, color.a);
+        let swap_result = match (first, second) {
+            (r1, r2) if (r, g) == (r1, r2) || (g, r) == (r1, r2) => Color {r: g, g: r, b, a},
+            (r1, r2) if (r, b) == (r1, r2) || (g, r) == (r1, r2) => Color {r: g, g: r, b, a},
+            (r1, r2) if (r, a) == (r1, r2) || (g, r) == (r1, r2) => Color {r: g, g: r, b, a},
+            (g1, g2) if (g, b) == (r1, r2) || (g, r) == (r1, r2) => Color {r: g, g: r, b, a},
+            (g1, g2) if (g, a) == (r1, r2) || (g, r) == (r1, r2) => Color {r: g, g: r, b, a},
+            (g1, g2) if (b, a) == (r1, r2) || (g, r) == (r1, r2) => Color {r: g, g: r, b, a},
+            _ => self,
+        };
+
+        self = swap_result;
+        self
     }
 }
+
+
+
+// Color { r: 10, g: 200, b: 255, a: 30 }
+// Color { r: 200, g: 255, b: 10, a: 30 }
+// Color { r: 30, g: 200, b: 10, a: 255 }
+
+// Color { r: 200, g: 255, b: 10, a: 30 }
+// Color { r: 255, g: 10, b: 200, a: 30 }
+// Color { r: 255, g: 30, b: 10, a: 200 }
+
+// Color { r: 10, g: 200, b: 255, a: 30 }
+// Color { r: 255, g: 10, b: 200, a: 30 }
+// Color { r: 255, g: 200, b: 30, a: 10 }
+
+// Color { r: 30, g: 200, b: 10, a: 255 }
+// Color { r: 255, g: 200, b: 30, a: 10 }
+// Color { r: 255, g: 30, b: 10, a: 200 }

@@ -8,19 +8,19 @@ fn main() {
         a: 30,
     };
 
-    println!("{:?}", c.swap(c.r, c.b));
-    println!("{:?}", c.swap(c.r, c.g));
-    println!("{:?}", c.swap(c.r, c.a));
+    println!("{:?}", c.clone().swap(c.r, c.b));
+    println!("{:?}", c.clone().swap(c.r, c.g));
+    println!("{:?}", c.clone().swap(c.r, c.a));
     println!();
-    println!("{:?}", c.swap(c.g, c.r));
-    println!("{:?}", c.swap(c.g, c.b));
-    println!("{:?}", c.swap(c.g, c.a));
+    println!("{:?}", c.clone().swap(c.g, c.r));
+    println!("{:?}", c.clone().swap(c.g, c.b));
+    println!("{:?}", c.clone().swap(c.g, c.a));
     println!();
-    println!("{:?}", c.swap(c.b, c.r));
-    println!("{:?}", c.swap(c.b, c.g));
-    println!("{:?}", c.swap(c.b, c.a));
+    println!("{:?}", c.clone().swap(c.b, c.r));
+    println!("{:?}", c.clone().swap(c.b, c.g));
+    println!("{:?}", c.clone().swap(c.b, c.a));
     println!();
-    println!("{:?}", c.swap(c.a, c.r));
-    println!("{:?}", c.swap(c.a, c.b));
-    println!("{:?}", c.swap(c.a, c.g));
+    println!("{:?}", c.clone().swap(c.a, c.r));
+    println!("{:?}", c.clone().swap(c.a, c.b));
+    println!("{:?}", c.clone().swap(c.a, c.g));
 }
