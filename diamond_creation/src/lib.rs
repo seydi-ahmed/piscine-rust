@@ -35,5 +35,16 @@ pub fn get_diamond(c: char) -> Vec<String> {
         result.push(line);
     }
 
+    // Si le diamant ne contient qu'une seule ligne, retourner directement le résultat
+    if result.len() == 1 {
+        return result;
+    }
+
+    // Copier la moitié supérieure du diamant (à l'exception de la première ligne) pour former la moitié inférieure
+    let mut lower_half = result[1..].iter().rev().cloned().collect::<Vec<_>>();
+
+    // Ajouter la moitié inférieure à la moitié supérieure
+    result.append(&mut lower_half);
+
     result
 }
