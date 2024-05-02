@@ -1,5 +1,6 @@
 extern crate case;
-pub use case::CaseExt;
+
+use case::CaseExt;
 
 
 
@@ -38,23 +39,24 @@ pub fn is_snake_case(s: &str) -> bool {
 }
 
 
-pub fn expected_variable(compared_str: &str, expected_str: &str) -> Option<String> {
-    // Check if the compared string is in camel case or snake case
-    if is_camel_case(compared_str) || is_snake_case(compared_str) {
-        // Calculate edit distance between compared string and expected string
-        let distance = edit_distance(compared_str, expected_str);
-        let max_distance = (expected_str.len() as f64 * 0.5).ceil() as usize;
+pub fn expected_variable(compared: &str, expected: &str) -> Option<String> {
+    if !contains_lowercase_and_underscore(compared) && !contains_lowercase_and_underscore(expected) {
+        return None;
+    }
 
-        // Check if the distance is less than or equal to 50% of expected string length
-        if distance <= max_distance {
-            // Calculate percentage similarity
-            let similarity = ((expected_str.len() - distance) as f64 / expected_str.len() as f64 * 100.0).round() as usize;
-            Some(format!("{}% close to it", similarity))
-        } else {
-            None
-        }
+    let compared_snake_case = compared.to_lowercase().replace(" ", "_");
+    let expected_snake_case = expected.to_lowercase().replace(" ", "_");
+
+    let distance = edit_distance(&compared_snake_case, &expected_snake_case);
+    let alikeness = 1.0 - (distance as f64 / expected_snake_case.len() as f64);
+    
+    if alikeness > 0.5 {
+        Some(format!("{:.0}% close to it", alikeness * 100.0))
     } else {
         None
     }
 }
 
+fn contains_lowercase_and_underscore(s: &str) -> bool {
+    s.chars().any(|c| c.is_ascii_lowercase()) && s.contains('_')
+}

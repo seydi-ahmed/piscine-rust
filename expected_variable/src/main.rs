@@ -1,4 +1,4 @@
-use expected_variable::*;
+// use expected_variable::*;
 
 // fn main() {
 //     println!(
@@ -18,6 +18,8 @@ use expected_variable::*;
 //         expected_variable("BenedictCumberbatch", "BeneficialCucumbersnatch").unwrap()
 //     );
 // }
+
+use expected_variable::*;
 
 fn main() {
     match expected_variable("On_Point", "on_point") {
