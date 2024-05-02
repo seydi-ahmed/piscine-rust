@@ -12,8 +12,8 @@ pub fn pig_latin(text: &str) -> String {
             
             if text[first_vowel_index..].starts_with("qu") {
                 // If the word starts with a consonant followed by "qu", move "qu" to the end.
-                let prefix = &text[..first_vowel_index + 2];
-                let suffix = &text[first_vowel_index + 2..];
+                let prefix = &text[..first_vowel_index + 1];
+                let suffix = &text[first_vowel_index + 1..];
                 return format!("{}{}ay", suffix, prefix);
             } else {
                 // If it starts with a consonant, move consonants before the first vowel to the end.
