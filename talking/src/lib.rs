@@ -18,12 +18,13 @@ pub fn talking(text: &str) -> &str {
         } else {
             return "There is no need to yell, calm down!";
         }
-    }
+    } else {
 
     // Check if the text is a question
     if text.ends_with('?') {
         return "Sure.";
     }
+}
 
     // Default response
     "Interesting"
