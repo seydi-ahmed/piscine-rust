@@ -1,14 +1,4 @@
-// pub use mobs::*;
-pub use crate::mobs::*;
-pub use crate::mobs::Mob; // Pour importer le type Mob
-use crate::mobs::boss::Boss; // Pour importer le module boss
-use crate::mobs::member::{Member, Role}; // Pour importer le module member
-pub use mobs::Mob; // Importation du type Mob
-use mobs::boss::Boss; // Importation du module boss
-use mobs::member::{Member, Role}; // Importation du module member
-
-
-
+use mobs::*;
 
 fn main() {
   let (mafia1, mafia2) = (
