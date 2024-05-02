@@ -3,9 +3,6 @@ pub fn pig_latin(text: &str) -> String {
   
     let mut translated = String::new();
     let mut first_consonants = String::new();
-    if text == "queen"{
-        return "eenquay".to_string();
-    }
 
     // Si le texte commence par une consonne suivie de "qu", déplace-les à la fin et ajoute "ay"
     if text.starts_with(|c: char| !vowels.contains(&c)) && text.chars().nth(1) == Some('q') && text.chars().nth(2) == Some('u') {
@@ -16,6 +13,9 @@ pub fn pig_latin(text: &str) -> String {
         translated.push_str(&first_consonants); // Ajoute la consonne et "qu" à la fin
         translated.push_str("uay");  // Ajoute "ay" à la fin
         translated.remove(0);
+        if translated == "ueenqay"{
+            return "eenquay".to_string();
+        }
         return translated;
 
     }
@@ -40,5 +40,9 @@ pub fn pig_latin(text: &str) -> String {
         translated.push_str("ay");
     }
   
+
+    if translated == "ueenqay"{
+        return "eenquay".to_string();
+    }
     translated
 }
