@@ -23,6 +23,6 @@ pub fn scytale_cipher(message: String, i: u32) -> String {
     for row in matrix {
         result.extend(row);
     }
-
+    result.remove(result.len()-1);
     result
 }
