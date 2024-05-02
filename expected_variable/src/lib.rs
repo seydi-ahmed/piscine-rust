@@ -42,7 +42,7 @@ pub fn expected_variable(compared: &str, expected: &str) -> Option<String> {
     let similarity = 1.0 - (distance as f64 / max_length as f64);
 
     if similarity > 0.5 {
-        Some(format!("{:.0}% close to it", similarity * 100.0))
+        Some(format!("{:.0}%", similarity * 100.0))
     } else {
         None
     }
@@ -70,3 +70,10 @@ fn is_camel(s: &str) -> bool {
     // Vérifie s'il y a au moins une lettre minuscule
     s.chars().any(|c| c.is_ascii_lowercase())
 }
+
+
+
+// 100% close to it
+// 88% close to it
+// None
+// 67% close to it
