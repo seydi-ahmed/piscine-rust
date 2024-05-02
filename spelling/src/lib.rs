@@ -48,9 +48,9 @@ pub fn spell(n: u64) -> String {
     // Traitement des dizaines et des unités
     let less_than_hundred = n % 100;
     if less_than_hundred > 0 {
-        if n >= 100 {
-            result.push_str("and ");
-        }
+        // if n >= 100 {
+        //     result.push_str("and ");
+        // }
         if less_than_hundred < 20 {
             result.push_str(&spell_less_than_20(less_than_hundred));
         } else {
@@ -172,3 +172,7 @@ fn spell_hundreds(n: u64) -> String {
         _ => unreachable!(),
     }
 }
+
+
+// three hundred forty-eight
+// nine thousand nine hundred ninety-six
