@@ -25,9 +25,10 @@ pub fn scytale_cipher(message: String, i: u32) -> String {
     }
 
     // Retirer le dernier espace s'il existe
-    if let Some(' ') = result.chars().last() {
-        result.pop();
-    }
+    // if let Some(' ') = result.chars().last() {
+    //     result.pop();
+    // }
 
-    result
+    let res : String = result.trim().to_string();
+    res
 }
