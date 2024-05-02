@@ -2,20 +2,15 @@ pub fn spell(n: u64) -> String {
     if n == 0 {
         return "zero".to_string();
     }
-
     let mut result = String::new();
-
-    // Traitement des milliards
-    if n >= 1_000_000_000 {
-        let billions = n / 1_000_000_000;
-        result.push_str(&spell_less_than_1000(billions));
-        result.push_str(" billion");
-        if n % 1_000_000_000 != 0 {
+    if n >= 1_000_000 {
+        let millions = n / 1_000_000;
+        result.push_str(&spell_less_than_1000(millions));
+        result.push_str(" million");
+        if n % 1_000_000 != 0 {
             result.push(' ');
         }
     }
-
-    // Traitement des millions
     if n >= 1_000_000 {
         let millions = (n / 1_000_000) % 1000;
         result.push_str(&spell_less_than_1000(millions));
@@ -24,8 +19,6 @@ pub fn spell(n: u64) -> String {
             result.push(' ');
         }
     }
-
-    // Traitement des milliers
     if n >= 1_000 {
         let thousands = (n / 1_000) % 1000;
         result.push_str(&spell_less_than_1000(thousands));
@@ -34,8 +27,6 @@ pub fn spell(n: u64) -> String {
             result.push(' ');
         }
     }
-
-    // Traitement des centaines
     if n >= 100 {
         let hundreds = (n / 100) % 10;
         result.push_str(&spell_hundreds(hundreds));
@@ -44,13 +35,8 @@ pub fn spell(n: u64) -> String {
             result.push(' ');
         }
     }
-
-    // Traitement des dizaines et des unités
     let less_than_hundred = n % 100;
     if less_than_hundred > 0 {
-        // if n >= 100 {
-        //     result.push_str("and ");
-        // }
         if less_than_hundred < 20 {
             result.push_str(&spell_less_than_20(less_than_hundred));
         } else {
@@ -66,8 +52,6 @@ pub fn spell(n: u64) -> String {
 
     result
 }
-
-// Fonction auxiliaire pour les nombres inférieurs à 1000
 fn spell_less_than_1000(n: u64) -> String {
     if n < 100 {
         spell_less_than_100(n)
@@ -82,8 +66,6 @@ fn spell_less_than_1000(n: u64) -> String {
         result
     }
 }
-
-// Fonction auxiliaire pour les nombres inférieurs à 100
 fn spell_less_than_100(n: u64) -> String {
     if n < 20 {
         spell_less_than_20(n)
@@ -98,8 +80,6 @@ fn spell_less_than_100(n: u64) -> String {
         result
     }
 }
-
-// Fonction auxiliaire pour les nombres inférieurs à 20
 fn spell_less_than_20(n: u64) -> String {
     match n {
         0 => "zero".to_string(),
@@ -125,8 +105,6 @@ fn spell_less_than_20(n: u64) -> String {
         _ => unreachable!(),
     }
 }
-
-// Fonction auxiliaire pour les dizaines
 fn spell_tens(n: u64) -> String {
     match n {
         20 => "twenty".to_string(),
@@ -140,8 +118,6 @@ fn spell_tens(n: u64) -> String {
         _ => unreachable!(),
     }
 }
-
-// Fonction auxiliaire pour les unités
 fn spell_units(n: u64) -> String {
     match n {
         1 => "one".to_string(),
@@ -156,8 +132,6 @@ fn spell_units(n: u64) -> String {
         _ => unreachable!(),
     }
 }
-
-// Fonction auxiliaire pour les centaines
 fn spell_hundreds(n: u64) -> String {
     match n {
         1 => "one".to_string(),
@@ -172,7 +146,3 @@ fn spell_hundreds(n: u64) -> String {
         _ => unreachable!(),
     }
 }
-
-
-// three hundred forty-eight
-// nine thousand nine hundred ninety-six
