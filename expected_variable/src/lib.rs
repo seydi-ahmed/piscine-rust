@@ -47,13 +47,15 @@ pub fn expected_variable(compared: &str, expected: &str) -> Option<String> {
     let compared_snake_case = compared.to_lowercase().replace(" ", "_");
     let expected_snake_case = expected.to_lowercase().replace(" ", "_");
 
+    let max_length = compared_snake_case.len().max(expected_snake_case.len());
+
     let distance = edit_distance(&compared_snake_case, &expected_snake_case);
-    let alikeness = 1.0 - (distance as f64 / expected_snake_case.len() as f64);
+    let alikeness = 1.0 - (distance as f64 / max_length as f64);
     
     if alikeness > 0.5 {
         Some(format!("{:.0}% close to it", alikeness * 100.0))
     } else {
-        None
+        Some("None".to_string())
     }
 }
 
