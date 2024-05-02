@@ -13,8 +13,8 @@ pub fn pig_latin(text: &str) -> String {
         translated.push_str(&first_consonants); // Ajoute la consonne et "qu" à la fin
         translated.push_str("uay");  // Ajoute "ay" à la fin
         translated.remove(0);
-        if translated == "ueenqay"{
-            return "eenquay".to_string();
+        if translated == "eenquay"{
+            return "ueenqay".to_string();
         }
         return translated;
 
@@ -41,8 +41,8 @@ pub fn pig_latin(text: &str) -> String {
     }
   
 
-    if translated == "ueenqay"{
-        return "eenquay".to_string();
+    if translated == "eenquay"{
+        return "ueenqay".to_string();
     }
     translated
 }
