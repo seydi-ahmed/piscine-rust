@@ -23,12 +23,6 @@ pub fn scytale_cipher(message: String, i: u32) -> String {
     for row in matrix {
         result.extend(row);
     }
-
-    // Retirer le dernier espace s'il existe
-    // if let Some(' ') = result.chars().last() {
-    //     result.pop();
-    // }
-
     let res : String = result.trim().to_string();
     res
 }

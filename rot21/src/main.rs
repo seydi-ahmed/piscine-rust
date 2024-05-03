@@ -1,44 +1,32 @@
 // pub fn rot21(input: &str) -> String {
-//     input.chars().map(|c| {
-//         if c.is_ascii_alphabetic() {
-//             let base = if c.is_ascii_lowercase() { b'a' } else { b'A' };
-//             (((c as u8 - base + 21) % 26) + base) as char
+//     let mut res = String::new();
+
+//     for c in input.chars() {
+//         if c >= 'a' && c <= 'z' {
+//             let rotated = rotate_lowercase(c, 21);
+//             res.push_str(&rotated.to_string());
+//         } else if c >= 'A' && c <= 'Z' {
+//             let rotated = rotate_uppercase(c, 21);
+//             res.push_str(&rotated.to_string());
 //         } else {
-//             c
+//             res.push_str(&c.to_string());
 //         }
-//     }).collect()
+//     }
+
+//     res
 // }
 
+// fn rotate_lowercase(c: char, shift: u8) -> char {
+//     let base = b'a';
+//     let rotated = ((c as u8 - base + shift) % 26) + base;
+//     rotated as char
+// }
 
-pub fn rot21(input: &str) -> String {
-    let mut res = String::new();
-
-    for c in input.chars() {
-        if c >= 'a' && c <= 'z' {
-            let rotated = rotate_lowercase(c, 21);
-            res.push_str(&rotated.to_string());
-        } else if c >= 'A' && c <= 'Z' {
-            let rotated = rotate_uppercase(c, 21);
-            res.push_str(&rotated.to_string());
-        } else {
-            res.push_str(&c.to_string());
-        }
-    }
-
-    res
-}
-
-fn rotate_lowercase(c: char, shift: u8) -> char {
-    let base = b'a';
-    let rotated = ((c as u8 - base + shift) % 26) + base;
-    rotated as char
-}
-
-fn rotate_uppercase(c: char, shift: u8) -> char {
-    let base = b'A';
-    let rotated = ((c as u8 - base + shift) % 26) + base;
-    rotated as char
-}
+// fn rotate_uppercase(c: char, shift: u8) -> char {
+//     let base = b'A';
+//     let rotated = ((c as u8 - base + shift) % 26) + base;
+//     rotated as char
+// }
 
 
 // ***********************************************************************
@@ -52,4 +40,40 @@ fn main() {
     println!("The word \"MISS\" becomes: {}", rot21("MISS"));
     println!("Your cypher wil be: {}", rot21("Testing numbers 1 2 3"));
     println!("Your cypher wil be: {}", rot21("rot21 works!"));
+}
+
+// ***********************************************************************
+// ***********************************************************************
+// ***********************************************************************
+// ***********************************************************************
+
+
+pub fn rot21(input: &str) -> String {
+    let mut res : String = String::new();
+
+    for letter in input.chars(){
+        if letter >= 'a' && letter <= 'z'{
+            let letter_to_pushed = rotate_lowercase(letter, 21);
+            res.push_str(&letter_to_pushed.to_string());
+        } else if letter >= 'A' && letter <= 'Z'{
+            let letter_to_pushed = rotate_uppercase(letter, 21);
+            res.push_str(&letter_to_pushed.to_string());
+        } else {
+            res.push_str(&letter.to_string());
+        }
+    }
+
+    res
+}
+
+pub fn rotate_lowercase(c: char, shift: u8) -> char {
+    let base = b'a';
+    let c_rotated = ((c as u8 - base + shift) % 26) + base;
+    c_rotated as char
+}
+
+pub fn rotate_uppercase(c: char, shift: u8) -> char {
+    let base = b'A';
+    let c_rotated = ((c as u8 - base + shift) % 26) + base;
+    c_rotated as char
 }

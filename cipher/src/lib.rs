@@ -60,7 +60,3 @@ pub fn atbash(c: char) -> char {
         _ => c,
     }
 }
-
-// Some(Ok(true))
-// Some(Err(CipherError { validation: false, expected: "1Svool 2dliow!" }))
-// None
