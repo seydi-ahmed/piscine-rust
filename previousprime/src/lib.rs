@@ -9,17 +9,24 @@ pub fn prev_prime(nbr: u64) -> u64  {
     res
 }
 
-pub fn is_prime(nbr: u64) -> bool {
-    if nbr == 1 {
+fn is_prime(n: u64) -> bool {
+    if n <= 1 {
         return false;
     }
-    if nbr == 2 {
+    if n == 2 {
         return true;
     }
-    for i in 2..nbr-1 {
-        if nbr%i == 0{
-            return false
-        }
+    if n % 2 == 0 {
+        return false;
     }
-    return true;
+
+    let mut i = 3;
+
+    while i * i <= n {
+        if n % i == 0 {
+            return false;
+        }
+        i += 2;
+    }
+    true
 }
