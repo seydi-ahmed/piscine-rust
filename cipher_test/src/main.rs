@@ -57,6 +57,7 @@ pub fn atbash(c: char) -> char {
         return c;
     }
 }
+
 fn main() {
     println!("{:?}", cipher("1Hello 2world!", "1Svool 2dliow!"));
     println!("{:?}", cipher("1Hello 2world!", "svool"));

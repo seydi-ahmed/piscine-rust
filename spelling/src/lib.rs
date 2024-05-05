@@ -29,7 +29,11 @@ pub fn spell(n: u64) -> String {
             let base = 10u64.pow((index as u32 + 1) * 3);
             if n >= base {
                 let prefix = spell(n / base);
-                let suffix = if n % base == 0 { "".to_string() } else { format!(" {}", spell(n % base)) };
+                let suffix = if n % base == 0 {
+                    "".to_string()
+                } else {
+                    format!(" {}", spell(n % base))
+                };
                 return format!("{} {}{}", prefix, thousand, suffix);
             }
         }
