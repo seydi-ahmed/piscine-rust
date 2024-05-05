@@ -1,4 +1,4 @@
-pub use json:: {self,object};
+pub use json::{self,object};
 
 pub struct Food {
     pub name: String,
