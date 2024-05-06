@@ -27,12 +27,13 @@ impl GameSession {
     }
 
     pub fn update_score(&mut self, user_name: String) {
-        if self.p1.0 == user_name && self.p1.1 < 3 && self.nb_games != 0 {
+        if self.p2.1 == 3 || self.p1.1 == 3 || self.nb_games == 0{
+            return;
+        }
+        if self.p1.0 == user_name{
             self.p1.1 += 1;
-            return;
-        } else if self.p2.0 == user_name && self.p2.1 < 3 && self.nb_games != 0 {
+        } else if self.p2.0 == user_name{
             self.p2.1 += 1;
-            return;
         }
         self.nb_games -= 1;
     }
