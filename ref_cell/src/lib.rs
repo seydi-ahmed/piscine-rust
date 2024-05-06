@@ -1,9 +1,9 @@
 use std::collections::HashMap;
 use std::cell::RefCell;
+
 mod messenger;
 use crate::messenger::messenger::Logger;
 use crate::messenger::messenger::Tracker;
-
 
 pub struct Worker<'a> {
     track_value: RefCell<Tracker<'a, Worker<'a>>>,
