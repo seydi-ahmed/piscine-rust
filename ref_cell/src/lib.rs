@@ -1,39 +1,36 @@
 use std::collections::HashMap;
-use std::cell::RefCell;
+pub mod messenger;
+pub use messenger::*;
 
-mod messenger;
-use crate::messenger::messenger::Logger;
-use crate::messenger::messenger::Tracker;
-
-pub struct Worker<'a> {
-    track_value: RefCell<Tracker<'a, Worker<'a>>>,
-    mapped_messages: HashMap<&'static str, String>,
-    all_messages: Vec<String>,
+pub struct Worker{
+    pub track_value: Rc<usize>,
+    pub mapped_messages: RefCell<HashMap<String, String>>,
+    pub all_messages: RefCell<Vec<String>>
 }
 
-impl<'a> Worker<'a> {
-    pub fn new(track_value: Tracker<'a, Worker<'a>>) -> Self {
-        Worker {
-            track_value: RefCell::new(track_value),
-            mapped_messages: HashMap::new(),
-            all_messages: Vec::new(),
+impl Worker{
+    pub fn new(value: usize) -> Self{
+        Self{
+            track_value: Rc::new(value),
+            mapped_messages: RefCell::new(HashMap::new()),
+            all_messages: RefCell::new(Vec::new())
         }
     }
 }
 
-impl<'a> Logger for Worker<'a> {
+impl Logger for Worker{
     fn warning(&self, msg: &str) {
-        self.mapped_messages.insert("warning", msg.to_string());
-        self.all_messages.push(msg.to_string());
-    }
-
-    fn info(&self, msg: &str) {
-        self.mapped_messages.insert("info", msg.to_string());
-        self.all_messages.push(msg.to_string());
+        self.mapped_messages.borrow_mut().insert("Warning".to_string(), msg.to_string());
+        self.all_messages.borrow_mut().push(format!("Warning: {}", msg));
     }
 
     fn error(&self, msg: &str) {
-        self.mapped_messages.insert("error", msg.to_string());
-        self.all_messages.push(msg.to_string());
+        self.mapped_messages.borrow_mut().insert("Error".to_string(), msg.to_string());
+        self.all_messages.borrow_mut().push(format!("Error: {}", msg))
+    }
+
+    fn info(&self, msg: &str) {
+        self.mapped_messages.borrow_mut().insert("Info".to_string(), msg.to_string());
+        self.all_messages.borrow_mut().push(format!("Info: {}", msg))
     }
 }
