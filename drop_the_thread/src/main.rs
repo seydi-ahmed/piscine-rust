@@ -1,25 +1,23 @@
-use std::cell::{RefCell, Cell};
+use std::rc::Rc;
+use drop_the_thread::*;
 
-#[derive(Debug, Default, Clone, Eq, PartialEq)]
-pub struct Workers {
-    pub drops: Cell<usize>,
-    pub states: RefCell<Vec<bool>>
-}
+fn main() {
+    let worker = Workers::new();
+    let (id, thread) = worker.new_worker(String::from("command"));
+    let (id1, thread1) = worker.new_worker(String::from("command1"));
 
-impl Workers {
-    pub fn new() -> Workers {}
-    pub fn new_worker(&self, c: String) -> (usize, Thread) {}
-    pub fn track_worker(&self) -> usize {}
-    pub fn is_dropped(&self, id: usize) -> bool {}
-    pub fn add_drop(&self, id: usize) {}
-}
+    thread.skill();
 
-#[derive(Debug, Clone, Eq, PartialEq)]
-pub struct Thread<'a> {
-    // expected public fields
-}
+    println!("{:?}", (worker.is_dropped(id), id, &worker.drops));
 
-impl<'a> Thread<'a> {
-    pub fn new_thread(p: usize, c: String, t: &'a Workers) -> Thread {}
-    pub fn skill(self) {}
+    thread1.skill();
+    println!("{:?}", (worker.is_dropped(id1), id1, &worker.drops));
+
+    let (id2, thread2) = worker.new_worker(String::from("command2"));
+    let thread2 = Rc::new(thread2);
+    let thread2_clone = thread2.clone();
+
+    drop(thread2_clone);
+
+    println!("{:?}", (worker.is_dropped(id2), id2, &worker.drops, Rc::strong_count(&thread2)));
 }
