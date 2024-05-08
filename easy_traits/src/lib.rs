@@ -21,7 +21,7 @@ impl AppendStr for StringValue {
             new_nb.remove(0);
         }
 
-        self.value.push_str(&new_nb.to_string());
+        self.append_str(new_nb);
     }
 
     fn remove_punctuation_marks(&mut self) {
