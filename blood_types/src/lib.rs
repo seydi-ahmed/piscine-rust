@@ -60,21 +60,47 @@ impl Ord for BloodType {
     }
 }
 
+// impl FromStr for BloodType {
+//     type Err = String;
+
+//     fn from_str(s: &str) -> Result<Self, Self::Err> {
+//         let parts: Vec<&str> = s.split("").collect();
+//         if parts.len() != 3 || (parts[2] != "+" && parts[2] != "-") {
+//             return Err("Invalid blood type format. Expected format: Antigen+/-".to_string());
+//         }
+
+//         let antigen = Antigen::from_str(parts[0])?;
+//         let rh_factor = RhFactor::from_str(parts[1]).expect("Invalid Rh factor");
+
+//         Ok(BloodType { antigen, rh_factor })
+//     }
+// }
+
 impl FromStr for BloodType {
     type Err = String;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let parts: Vec<&str> = s.split("").collect();
-        if parts.len() != 3 || (parts[2] != "+" && parts[2] != "-") {
+        // Check if the string has the correct format
+        if!s.chars().count() == 3 && (s.chars().last()!= Some('+') && s.chars().last()!= Some('-')) {
             return Err("Invalid blood type format. Expected format: Antigen+/-".to_string());
         }
 
-        let antigen = Antigen::from_str(parts[0])?;
-        let rh_factor = RhFactor::from_str(parts[1])?;
+        // Split the string into parts
+        let parts: Vec<&str> = s.split("").collect();
 
-        Ok(BloodType { antigen, rh_factor })
+        // Parse the antigen and Rh factor
+        let antigen = Antigen::from_str(parts[0])?;
+        let rh_factor = RhFactor::from_str(parts[1]);
+
+        // Handle the possibility of an Err from RhFactor::from_str
+        match rh_factor {
+            Ok(rh) => Ok(BloodType { antigen, rh_factor: rh }),
+            Err(_) => Err("Invalid Rh factor".to_string()),
+        }
     }
 }
+
+
 
 
 use std::fmt::{self, Debug};
