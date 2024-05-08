@@ -10,19 +10,25 @@ pub trait AppendStr {
 }
 
 impl AppendStr for StringValue {
-    fn append_str(&mut self, str_to_append: String) -> Self {
+    fn append_str(&mut self, str_to_append: String){
         self.value.push_str(&str_to_append);
-        return self;
+        // return self;
     }
 
-    fn append_number(&mut self, nb_to_append: f64) -> Self {
-        self.value.push_str(&nb_to_append.to_string());
-        return self;
+    fn append_number(&mut self, nb_to_append: f64){
+        let mut new_nb : String = nb_to_append.clone().to_string();
+
+        if nb_to_append.to_string().starts_with('-'){
+            new_nb.remove(0);
+        }
+
+        self.value.push_str(&new_nb.to_string());
+        // return self;
     }
 
-    fn remove_punctuation_marks(&mut self) -> Self {
+    fn remove_punctuation_marks(&mut self){
         let punctuation_marks = ['.', ',', '?', '!'];
         self.value.retain(|c| !punctuation_marks.contains(&c));
-        return self;
+        // return self;
     }
 }
