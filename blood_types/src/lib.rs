@@ -1,6 +1,4 @@
-use std::cmp::Ordering;
-use std::fmt;
-use std::str::FromStr;
+// lib.rs
 
 #[derive(Debug, PartialEq, Eq, Clone, PartialOrd, Ord)]
 pub enum Antigen {
@@ -11,7 +9,7 @@ pub enum Antigen {
 }
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone)]
-enum RhFactor {
+pub enum RhFactor {
     Positive,
     Negative,
 }
@@ -22,8 +20,12 @@ pub struct BloodType {
     pub rh_factor: RhFactor,
 }
 
+use std::cmp::{Ord, Ordering};
+
+use std::str::FromStr;
+
 impl FromStr for Antigen {
-    type Err = ();
+    type Err = String;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
@@ -31,32 +33,20 @@ impl FromStr for Antigen {
             "AB" => Ok(Antigen::AB),
             "B" => Ok(Antigen::B),
             "O" => Ok(Antigen::O),
-            _ => Err(()),
+            _ => Err("Invalid antigen".to_string()),
         }
     }
 }
 
 impl FromStr for RhFactor {
-    type Err = ();
+    type Err = String;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             "+" => Ok(RhFactor::Positive),
             "-" => Ok(RhFactor::Negative),
-            _ => Err(()),
+            _ => Err("Invalid Rh factor".to_string()),
         }
-    }
-}
-
-impl FromStr for BloodType {
-    type Err = ();
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let antigen_str = &s[..s.len() - 1];
-        let rh_factor_str = &s[s.len() - 1..];
-        let antigen = Antigen::from_str(antigen_str)?;
-        let rh_factor = RhFactor::from_str(rh_factor_str)?;
-        Ok(BloodType { antigen, rh_factor })
     }
 }
 
@@ -70,165 +60,139 @@ impl Ord for BloodType {
     }
 }
 
-impl fmt::Display for BloodType {
+impl FromStr for BloodType {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let parts: Vec<&str> = s.split("").collect();
+        if parts.len() != 3 || (parts[2] != "+" && parts[2] != "-") {
+            return Err("Invalid blood type format. Expected format: Antigen+/-".to_string());
+        }
+
+        let antigen = Antigen::from_str(parts[0])?;
+        let rh_factor = RhFactor::from_str(parts[1])?;
+
+        Ok(BloodType { antigen, rh_factor })
+    }
+}
+
+
+use std::fmt::{self, Debug};
+
+impl Debug for BloodType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "{}{}",
-            match self.antigen {
-                Antigen::A => "A",
-                Antigen::AB => "AB",
-                Antigen::B => "B",
-                Antigen::O => "O",
-            },
-            match self.rh_factor {
-                RhFactor::Positive => "+",
-                RhFactor::Negative => "-",
-            }
-        )
+        let rh_str = match self.rh_factor {
+            RhFactor::Positive => "+",
+            RhFactor::Negative => "-",
+        };
+        write!(f, "{:?}{}", self.antigen, rh_str)
     }
 }
 
 impl BloodType {
     pub fn can_receive_from(&self, other: &Self) -> bool {
-        match (&self.antigen, &other.antigen, &self.rh_factor, &other.rh_factor) {
-            (&Antigen::O, _, _, _) => true,
-            (_, &Antigen::AB, _, _) => true,
-            (&Antigen::A, &Antigen::A, _, _) => true,
-            (&Antigen::A, &Antigen::O, _, _) => true,
-            (&Antigen::B, &Antigen::B, _, _) => true,
-            (&Antigen::B, &Antigen::O, _, _) => true,
+        match (self.antigen.clone(), other.antigen.clone(), self.rh_factor.clone(), other.rh_factor.clone()) {
+            (Antigen::AB, _, _, _) => true,
+            (Antigen::A, Antigen::A, _, _) => true,
+            (Antigen::A, Antigen::O, _, _) => true,
+            (Antigen::B, Antigen::B, _, _) => true,
+            (Antigen::B, Antigen::O, _, _) => true,
+            (Antigen::O, _, _, _) => true,
             _ => false,
         }
     }
-    
 
-    pub fn donors(&self) -> Vec<BloodType> {
+    pub fn donors(&self) -> Vec<Self> {
         let mut donors = Vec::new();
-        match self.antigen {
-            Antigen::O => {
-                donors.push(BloodType {
-                    antigen: Antigen::O,
-                    rh_factor: RhFactor::Positive,
-                });
-                donors.push(BloodType {
-                    antigen: Antigen::O,
-                    rh_factor: RhFactor::Negative,
-                });
-            }
-            Antigen::AB => {
-                donors.push(BloodType {
-                    antigen: Antigen::AB,
-                    rh_factor: RhFactor::Positive,
-                });
-            }
-            Antigen::A => {
-                donors.push(BloodType {
-                    antigen: Antigen::A,
-                    rh_factor: RhFactor::Positive,
-                });
-                donors.push(BloodType {
-                    antigen: Antigen::A,
-                    rh_factor: RhFactor::Negative,
-                });
-            }
-            Antigen::B => {
-                donors.push(BloodType {
-                    antigen: Antigen::B,
-                    rh_factor: RhFactor::Positive,
-                });
-                donors.push(BloodType {
-                    antigen: Antigen::B,
-                    rh_factor: RhFactor::Negative,
-                });
-            }
+        let antigen = self.antigen.clone();
+        let rh_factor = self.rh_factor.clone();
+        match (antigen, rh_factor) {
+            (Antigen::A, RhFactor::Positive) => {
+                donors.push(BloodType { antigen: Antigen::A, rh_factor: RhFactor::Positive });
+                donors.push(BloodType { antigen: Antigen::A, rh_factor: RhFactor::Negative });
+            },
+            (Antigen::A, RhFactor::Negative) => {
+                donors.push(BloodType { antigen: Antigen::A, rh_factor: RhFactor::Negative });
+            },
+            (Antigen::B, RhFactor::Positive) => {
+                donors.push(BloodType { antigen: Antigen::B, rh_factor: RhFactor::Positive });
+                donors.push(BloodType { antigen: Antigen::B, rh_factor: RhFactor::Negative });
+            },
+            (Antigen::B, RhFactor::Negative) => {
+                donors.push(BloodType { antigen: Antigen::B, rh_factor: RhFactor::Negative });
+            },
+            (Antigen::AB, RhFactor::Positive) => {
+                donors.push(BloodType { antigen: Antigen::A, rh_factor: RhFactor::Positive });
+                donors.push(BloodType { antigen: Antigen::A, rh_factor: RhFactor::Negative });
+                donors.push(BloodType { antigen: Antigen::B, rh_factor: RhFactor::Positive });
+                donors.push(BloodType { antigen: Antigen::B, rh_factor: RhFactor::Negative });
+                donors.push(BloodType { antigen: Antigen::AB, rh_factor: RhFactor::Positive });
+                donors.push(BloodType { antigen: Antigen::AB, rh_factor: RhFactor::Negative });
+            },
+            (Antigen::AB, RhFactor::Negative) => {
+                donors.push(BloodType { antigen: Antigen::A, rh_factor: RhFactor::Negative });
+                donors.push(BloodType { antigen: Antigen::B, rh_factor: RhFactor::Negative });
+                donors.push(BloodType { antigen: Antigen::AB, rh_factor: RhFactor::Negative });
+            },
+            (Antigen::O, RhFactor::Positive) => {
+                donors.push(BloodType { antigen: Antigen::O, rh_factor: RhFactor::Positive });
+                donors.push(BloodType { antigen: Antigen::O, rh_factor: RhFactor::Negative });
+            },
+            (Antigen::O, RhFactor::Negative) => {
+                donors.push(BloodType { antigen: Antigen::O, rh_factor: RhFactor::Negative });
+            },
         }
         donors
     }
 
     pub fn recipients(&self) -> Vec<BloodType> {
         let mut recipients = Vec::new();
-        match self.antigen {
-            Antigen::AB => {
-                recipients.push(BloodType {
-                    antigen: Antigen::AB,
-                    rh_factor: RhFactor::Positive,
-                });
-                recipients.push(BloodType {
-                    antigen: Antigen::AB,
-                    rh_factor: RhFactor::Negative,
-                });
-                recipients.push(BloodType {
-                    antigen: Antigen::A,
-                    rh_factor: RhFactor::Positive,
-                });
-                recipients.push(BloodType {
-                    antigen: Antigen::A,
-                    rh_factor: RhFactor::Negative,
-                });
-                recipients.push(BloodType {
-                    antigen: Antigen::B,
-                    rh_factor: RhFactor::Positive,
-                });
-                recipients.push(BloodType {
-                    antigen: Antigen::B,
-                    rh_factor: RhFactor::Negative,
-                });
-                recipients.push(BloodType {
-                    antigen: Antigen::O,
-                    rh_factor: RhFactor::Positive,
-                });
-                recipients.push(BloodType {
-                    antigen: Antigen::O,
-                    rh_factor: RhFactor::Negative,
-                });
-            }
-            Antigen::A => {
-                recipients.push(BloodType {
-                    antigen: Antigen::A,
-                    rh_factor: RhFactor::Positive,
-                });
-                recipients.push(BloodType {
-                    antigen: Antigen::A,
-                    rh_factor: RhFactor::Negative,
-                });
-                recipients.push(BloodType {
-                    antigen: Antigen::O,
-                    rh_factor: RhFactor::Positive,
-                });
-                recipients.push(BloodType {
-                    antigen: Antigen::O,
-                    rh_factor: RhFactor::Negative,
-                });
-            }
-            Antigen::B => {
-                recipients.push(BloodType {
-                    antigen: Antigen::B,
-                    rh_factor: RhFactor::Positive,
-                });
-                recipients.push(BloodType {
-                    antigen: Antigen::B,
-                    rh_factor: RhFactor::Negative,
-                });
-                recipients.push(BloodType {
-                    antigen: Antigen::O,
-                    rh_factor: RhFactor::Positive,
-                });
-                recipients.push(BloodType {
-                    antigen: Antigen::O,
-                    rh_factor: RhFactor::Negative,
-                });
-            }
-            Antigen::O => {
-                recipients.push(BloodType {
-                    antigen: Antigen::O,
-                    rh_factor: RhFactor::Positive,
-                });
-                recipients.push(BloodType {
-                    antigen: Antigen::O,
-                    rh_factor: RhFactor::Negative,
-                });
-            }
+        let antigen = self.antigen.clone();
+        let rh_factor = self.rh_factor.clone();
+        match (antigen, rh_factor) {
+            (Antigen::A, RhFactor::Positive) => {
+                recipients.push(BloodType { antigen: Antigen::AB, rh_factor: RhFactor::Positive });
+                recipients.push(BloodType { antigen: Antigen::A, rh_factor: RhFactor::Positive });
+            },
+            (Antigen::A, RhFactor::Negative) => {
+                recipients.push(BloodType { antigen: Antigen::AB, rh_factor: RhFactor::Positive });
+                recipients.push(BloodType { antigen: Antigen::AB, rh_factor: RhFactor::Negative });
+                recipients.push(BloodType { antigen: Antigen::A, rh_factor: RhFactor::Positive });
+                recipients.push(BloodType { antigen: Antigen::A, rh_factor: RhFactor::Negative });
+            },
+            (Antigen::B, RhFactor::Positive) => {
+                recipients.push(BloodType { antigen: Antigen::AB, rh_factor: RhFactor::Positive });
+                recipients.push(BloodType { antigen: Antigen::B, rh_factor: RhFactor::Positive });
+            },
+            (Antigen::B, RhFactor::Negative) => {
+                recipients.push(BloodType { antigen: Antigen::AB, rh_factor: RhFactor::Positive });
+                recipients.push(BloodType { antigen: Antigen::AB, rh_factor: RhFactor::Negative });
+                recipients.push(BloodType { antigen: Antigen::B, rh_factor: RhFactor::Positive });
+                recipients.push(BloodType { antigen: Antigen::B, rh_factor: RhFactor::Negative });
+            },
+            (Antigen::AB, RhFactor::Positive) => {
+                recipients.push(BloodType { antigen: Antigen::AB, rh_factor: RhFactor::Positive });
+            },
+            (Antigen::AB, RhFactor::Negative) => {
+                recipients.push(BloodType { antigen: Antigen::AB, rh_factor: RhFactor::Positive });
+                recipients.push(BloodType { antigen: Antigen::AB, rh_factor: RhFactor::Negative });
+            },
+            (Antigen::O, RhFactor::Positive) => {
+                recipients.push(BloodType { antigen: Antigen::AB, rh_factor: RhFactor::Positive });
+                recipients.push(BloodType { antigen: Antigen::A, rh_factor: RhFactor::Positive });
+                recipients.push(BloodType { antigen: Antigen::B, rh_factor: RhFactor::Positive });
+                recipients.push(BloodType { antigen: Antigen::O, rh_factor: RhFactor::Positive });
+            },
+            (Antigen::O, RhFactor::Negative) => {
+                recipients.push(BloodType { antigen: Antigen::AB, rh_factor: RhFactor::Positive });
+                recipients.push(BloodType { antigen: Antigen::AB, rh_factor: RhFactor::Negative });
+                recipients.push(BloodType { antigen: Antigen::A, rh_factor: RhFactor::Positive });
+                recipients.push(BloodType { antigen: Antigen::A, rh_factor: RhFactor::Negative });
+                recipients.push(BloodType { antigen: Antigen::B, rh_factor: RhFactor::Positive });
+                recipients.push(BloodType { antigen: Antigen::B, rh_factor: RhFactor::Negative });
+                recipients.push(BloodType { antigen: Antigen::O, rh_factor: RhFactor::Positive });
+                recipients.push(BloodType { antigen: Antigen::O, rh_factor: RhFactor::Negative });
+            },
         }
         recipients
     }
