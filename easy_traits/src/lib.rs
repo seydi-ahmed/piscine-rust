@@ -4,53 +4,25 @@ pub struct StringValue {
 }
 
 pub trait AppendStr {
-    fn append_str(&mut self, str_to_append: String);
-    fn append_number(&mut self, nb_to_append: f64);
-    fn remove_punctuation_marks(&mut self);
+    fn append_str(&mut self, str_to_append: String) -> Self;
+    fn append_number(&mut self, nb_to_append: f64) -> Self;
+    fn remove_punctuation_marks(&mut self) -> Self;
 }
 
 impl AppendStr for StringValue {
-    fn append_str(&mut self, str_to_append: String) {
+    fn append_str(&mut self, str_to_append: String) -> Self {
         self.value.push_str(&str_to_append);
+        self.clone()
     }
 
-    fn append_number(&mut self, nb_to_append: f64) {
-        let mut new_nb : String = nb_to_append.clone().to_string();
-
-        if nb_to_append.to_string().starts_with('-'){
-            new_nb.remove(0);
-        }
-
-        self.append_str(new_nb);
+    fn append_number(&mut self, nb_to_append: f64) -> Self {
+        self.value.push_str(&nb_to_append.to_string());
+        self.clone()
     }
 
-    fn remove_punctuation_marks(&mut self) {
+    fn remove_punctuation_marks(&mut self) -> Self {
         let punctuation_marks = ['.', ',', '?', '!'];
         self.value.retain(|c| !punctuation_marks.contains(&c));
+        self.clone()
     }
 }
-
-
-// impl AppendStr for StringValue {
-//     fn append_str(&mut self, str_to_append: String) -> Self{
-//         self.value.push_str(&str_to_append);
-//         return self.value;
-//     }
-
-//     fn append_number(&mut self, nb_to_append: f64) -> Self {
-//         let mut new_nb : String = nb_to_append.clone().to_string();
-
-//         if nb_to_append.to_string().starts_with('-'){
-//             new_nb.remove(0);
-//         }
-
-//         self.value.push_str(&new_nb.to_string());
-//         return self.value;
-//     }
-
-//     fn remove_punctuation_marks(&mut self) -> Self{
-//         let punctuation_marks = ['.', ',', '?', '!'];
-//         self.value.retain(|c| !punctuation_marks.contains(&c));
-//         return self.value;
-//     }
-// }
