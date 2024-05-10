@@ -69,6 +69,5 @@ pub fn rpn(expr: &str) {
     }
 }
 
-fn main() {
-    
+fn main() {   
 }
