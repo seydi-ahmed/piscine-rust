@@ -5,6 +5,10 @@ fn main() {
 	println!("{:?}", RomanNumber::from(0));
 }
 
+
+//********************************************************
+
+
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum RomanDigit {
 	Nulla,
@@ -17,46 +21,39 @@ pub enum RomanDigit {
 	M,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, Debug, PartialEq, Eq)]
 pub struct RomanNumber(pub Vec<RomanDigit>);
 
 impl From<u32> for RomanDigit {
-    fn from (num : u32) -> Self {
+    fn from (num: u32) -> Self {
         match num {
-            0 => RomanDigit::Nulla,
             1 => RomanDigit::I,
-            5 => RomanDigit::V,
-            10 => RomanDigit::X,
-            50 => RomanDigit::L,
-            100 => RomanDigit::C,
-            500 => RomanDigit::D,
-            1000 => RomanDigit::M,
-            _ => panic!(),
+            _ => RomanDigit::Nulla,
         }
     }
 }
 
 impl From<u32> for RomanNumber {
-    fn from (mut num : u32) -> Self {
-        if num == 0 {
+    fn from (num: u32) -> Self {
+        if n == 0 {
             return RomanNumber(vec![RomanDigit::Nulla]);
         }
 
-        let mut result = Vec::new();
-        let div = vec![1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
-
-        for (i, n) in div.iter().enumerate() {
-            while n <= &num {
-                if i % 2 == 0 {
-                    result.push(RomanDigit::from(*n));
-                } else {
-                    let rem = div[i - 1] - div[i];
-                    result.push(RomanDigit::from(rem));
-                    result.push(RomanDigit::from(div[i - 1]));
-                }
-                num -= n;}
-        }
-
-        RomanNumber(result)
+        use RomanDigit::*;
+        let conversions = [
+            (1000, vec![M]),
+            (900, vec![C, M]),
+            (500, vec![D]),
+            (400, vec![C, D]),
+            (100, vec![C]),
+            (90, vec![X, C]),
+            (50, vec![L]),
+            (40, vec![X, L]),
+            (10, vec![X]),
+            (9, vec![I, X]),
+            (5, vec![V]),
+            (4, vec![I, V]),
+            (1, vec![I]),
+        ];
     }
 }
