@@ -23,22 +23,26 @@ impl From<u32> for RomanDigit {
 } 
 
 impl From<u32> for RomanNumber {
-
-     fn from(n:u32)-> Self{
+    
+    fn from(n:u32)-> Self{
+        if n == 0 {
+            return RomanNumber(vec![RomanDigit::Nulla]);
+        }
+        use RomanDigit::*;
         let conversions = [
-            (1000, vec![RomanDigit::M]),
-            (900, vec![RomanDigit::C, RomanDigit::M]),
-            (500, vec![RomanDigit::D]),
-            (400, vec![RomanDigit::C, RomanDigit::D]),
-            (100, vec![RomanDigit::C]),
-            (90, vec![RomanDigit::X, RomanDigit::C]),
-            (50, vec![RomanDigit::L]),
-            (40, vec![RomanDigit::X, RomanDigit::L]),
-            (10, vec![RomanDigit::X]),
-            (9, vec![RomanDigit::I, RomanDigit::X]),
-            (5, vec![RomanDigit::V]),
-            (4, vec![RomanDigit::I, RomanDigit::V]),
-            (1, vec![RomanDigit::I]),
+            (1000, vec![M]),
+            (900, vec![C, M]),
+            (500, vec![D]),
+            (400, vec![C, D]),
+            (100, vec![C]),
+            (90, vec![X, C]),
+            (50, vec![L]),
+            (40, vec![X, L]),
+            (10, vec![X]),
+            (9, vec![I, X]),
+            (5, vec![V]),
+            (4, vec![I, V]),
+            (1, vec![I]),
         ];
 
         let mut result : Vec<RomanDigit> =  Vec::new();
