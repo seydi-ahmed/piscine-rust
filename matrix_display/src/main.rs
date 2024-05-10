@@ -25,7 +25,7 @@ use std::fmt;
 
 impl fmt::Display for Matrix {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        for row in &self.0 {
+        for (index, row) in self.0.iter().enumerate() {
             write!(f, "(")?;
             for (i, &elem) in row.iter().enumerate() {
                 write!(f, "{}", elem)?;
@@ -33,7 +33,10 @@ impl fmt::Display for Matrix {
                     write!(f, " ")?;
                 }
             }
-            write!(f, ")\n")?;
+            write!(f, ")")?;
+            if index < self.0.len() - 1 {
+                write!(f, "\n")?;
+            }
         }
         Ok(())
     }

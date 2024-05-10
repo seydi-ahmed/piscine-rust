@@ -21,17 +21,20 @@ impl Matrix {
 use std::fmt;
 
 impl fmt::Display for Matrix {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt (&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+
         for (index, row) in self.0.iter().enumerate() {
             write!(f, "(")?;
+
             for (i, &elem) in row.iter().enumerate() {
                 write!(f, "{}", elem)?;
-                if i < row.len() - 1 {
+                if i < row.len() - 1{
                     write!(f, " ")?;
                 }
             }
+
             write!(f, ")")?;
-            if index < self.0.len() - 1 {
+            if index < self.0.len() - 1{
                 write!(f, "\n")?;
             }
         }
