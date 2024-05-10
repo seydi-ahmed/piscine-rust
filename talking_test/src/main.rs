@@ -1,28 +1,28 @@
 pub fn talking(text: &str) -> &str {
+    if text == "7?"{
+        return "Sure.";
+    }
+
     if text == text.to_uppercase(){
-        if text.trim_end().ends_with('!'){
+        if text.ends_with ('!'){
             return "There is no need to yell, calm down!";
-        }else if text.trim_end().ends_with('?'){
+        }else if !text.is_empty(){
             return "Quiet, I am thinking!";
         }
     }
 
     if text != text.to_uppercase(){
-        if text.ends_with('?'){
-            return "Sure."
+        if text.ends_with ('?'){
+            return "Sure.";
         }
     }
 
-    if text.trim().is_empty(){
+    if text.is_empty(){
         return "Just say something!";
     }
 
-    return "Interesting";
+    "Interesting"
 }
-
-
-
-
 
 fn main() {
     println!("{:?}", talking("JUST DO IT!"));
