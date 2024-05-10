@@ -1,4 +1,3 @@
-use crate::RomanDigit::*;
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum RomanDigit {
@@ -18,48 +17,40 @@ pub struct RomanNumber(pub Vec<RomanDigit>);
 impl From<u32> for RomanDigit {
     fn from(num: u32) -> Self {
         match num {
-            1 => Self::I,
-            5 => Self::V,
-            10 => Self::X,
-            50 => Self::L,
-            100 => Self::C,
-            500 => Self::D,
-            1000 => Self::M,
-            _ => Self::Nulla,
+            0 => RomanDigit::Nulla,
+            1 => RomanDigit::I,
+            5 => RomanDigit::V,
+            10 => RomanDigit::X,
+            50 => RomanDigit::L,
+            100 => RomanDigit::C,
+            500 => RomanDigit::D,
+            1000 => RomanDigit::M,
+            _ => panic!(),
         }
     }
 }
 
-
 impl From<u32> for RomanNumber {
-    fn from(mut num: u32) -> Self {
-        let mut digits: Vec<RomanDigit> = Vec::new();
-        let numerals = vec![1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
-        let symbols = vec!["M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"];
-        let mut index = 0;
+    fn from(mut num: u32) -> Self{
         if num == 0 {
-            digits.push(RomanDigit::Nulla);
-            return Self(digits);
+            return RomanNumber(vec![RomanDigit::Nulla]);
         }
-        while num > 0 {
-            let mut quotient = num / numerals[index];
-            num %= numerals[index];
-            while quotient > 0 {
-                digits.extend(symbols[index].chars().map(|c| match c {
-                    'M' => RomanDigit::M,
-                    'D' => RomanDigit::D,
-                    'C' => RomanDigit::C,
-                    'L' => RomanDigit::L,
-                    'X' => RomanDigit::X,
-                    'V' => RomanDigit::V,
-                    'I' => RomanDigit::I,
-                    _ => RomanDigit::Nulla,
-                }));
-                quotient -= 1;
+        
+        let mut result = Vec::new();
+        let div = vec![1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
+        
+        for (i, n) in div.iter().enumerate() {
+            while n <= &num {
+                if i % 2 == 0 {
+                    result.push(RomanDigit::from(*n));
+                }else{
+                    let rem = div[i - 1] - div[i];
+                    result.push(RomanDigit::from(rem));
+                    result.push(RomanDigit::from(div[i - 1]));
+                }
+                num -= n;
             }
-            index += 1;
         }
-
-        Self(digits)
+        RomanNumber(result)
     }
-}   
+}
