@@ -8,26 +8,35 @@ fn main() {
 
 // ********************************************************************
 
-use chrono::*;
-use json::*;
+use chrono::{Datelike, NaiveDate};
+use json::JsonValue;
 use std::collections::HashMap;
 
-pub fn commits_per_week(data: &json::JsonValue) -> HashMap<String, u32> {
-    let mut com_per_week : HashMap<String, u32> = HashMap::new();
+pub fn commits_per_week(data: &JsonValue) -> HashMap<String, u32> {
+    let mut commits_per_week: HashMap<String, u32> = HashMap::new();
 
     for commit in data.members() {
+        if let (Some(date_str), Some(_author)) = (commit["commit"]["author"]["date"].as_str(), commit["author"]["login"].as_str()) {
+            let date = NaiveDate::parse_from_str(date_str, "%Y-%m-%dT%H:%M:%SZ").unwrap();
+            let week_str = format!("{}-W{}", date.year(), date.iso_week().week());
 
+            let count = commits_per_week.entry(week_str).or_insert(0);
+            *count += 1;
+        }
     }
 
-    com_per_week
+    commits_per_week
 }
 
-pub fn commits_per_author(data: &json::JsonValue) -> HashMap<String, u32> {
-    let mut com_per_author : HashMap<String, u32> = HashMap::new();
+pub fn commits_per_author(data: &JsonValue) -> HashMap<String, u32> {
+    let mut commits_per_author: HashMap<String, u32> = HashMap::new();
 
     for commit in data.members() {
-        
+        if let Some(author) = commit["author"]["login"].as_str() {
+            let count = commits_per_author.entry(author.to_string()).or_insert(0);
+            *count += 1;
+        }
     }
 
-    com_per_author
+    commits_per_author
 }
