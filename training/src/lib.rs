@@ -69,55 +69,6 @@ pub fn parts_sums(arr: &[u64]) -> Vec<u64> {
 
 // *************************************
 
-pub fn next_prime(nbr: u64) -> u64 {
-    let mut num = nbr;
-
-    while !is_prime(num) {
-        num += 1;
-    }
-    
-    num
-}
-
-fn is_prime(n: u64) -> bool {
-    if n <= 1 {
-        return false;
-    }
-    if n == 2 {
-        return true;
-    }
-    if n % 2 == 0 {
-        return false;
-    }
-
-    let mut i = 3;
-
-    while i * i <= n {
-        if n % i == 0 {
-            return false;
-        }
-        i += 2;
-    }
-    true
-}
-
-
-pub fn prev_prime(nbr: u64) -> u64 {
-    if nbr <= 2 {
-        return 0;
-    }
-    
-    let mut num = nbr;
-    
-    while !is_prime(num) {
-        num -= 1;
-    }
-    
-    num
-}
-
-// *************************************
-
 pub fn inv_pyramid(v: String, i: u32) -> Vec<String> {
     (1..=i as usize)
         .chain((1..i as usize).rev())
