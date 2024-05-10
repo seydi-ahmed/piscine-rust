@@ -13,14 +13,28 @@ pub struct Matrix(pub Vec<Vec<i32>>);
 
 impl Matrix {
     pub fn new(slice: &[&[i32]]) -> Self {
-
+        let mut matrix = Vec::new();
+        for row in slice {
+            matrix.push(row.to_vec());
+        }
+        Matrix(matrix)
     }
 }
 
 use std::fmt;
 
 impl fmt::Display for Matrix {
-
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        for row in &self.0 {
+            write!(f, "(")?;
+            for (i, &elem) in row.iter().enumerate() {
+                write!(f, "{}", elem)?;
+                if i < row.len() - 1 {
+                    write!(f, " ")?;
+                }
+            }
+            write!(f, ")\n")?;
+        }
+        Ok(())
+    }
 }
-
-

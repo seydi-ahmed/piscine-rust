@@ -41,8 +41,8 @@ impl From<u32> for RomanNumber {
             (1, vec![RomanDigit::I]),
         ];
 
-        let mut result :Vec<RomanDigit> =  Vec::new();
-        let mut i =n;
+        let mut result : Vec<RomanDigit> =  Vec::new();
+        let mut i = n;
         for v in conversions.iter(){
             while i >= v.0{
                 result.extend(&v.1);
