@@ -30,6 +30,7 @@ impl From<u32> for RomanDigit {
     }
 }
 
+
 impl From<u32> for RomanNumber {
     fn from(mut num: u32) -> Self {
         let mut digits: Vec<RomanDigit> = Vec::new();
