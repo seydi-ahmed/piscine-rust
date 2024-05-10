@@ -1,4 +1,5 @@
 fn main() {
+	println!("{:?}", RomanNumber::from(4));
 	println!("{:?}", RomanNumber::from(32));
 	println!("{:?}", RomanNumber::from(9));
 	println!("{:?}", RomanNumber::from(45));
@@ -21,7 +22,7 @@ pub enum RomanDigit {
 	M,
 }
 
-#[derive(Debug, Clone, Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RomanNumber(pub Vec<RomanDigit>);
 
 impl From<u32> for RomanDigit {
@@ -35,7 +36,7 @@ impl From<u32> for RomanDigit {
 
 impl From<u32> for RomanNumber {
     fn from (num: u32) -> Self {
-        if n == 0 {
+        if num == 0 {
             return RomanNumber(vec![RomanDigit::Nulla]);
         }
 
@@ -55,5 +56,18 @@ impl From<u32> for RomanNumber {
             (4, vec![I, V]),
             (1, vec![I]),
         ];
+
+        let mut result : Vec<RomanDigit> = Vec::new();
+        let mut i = num;
+
+        for v in conversions.iter() {
+            while i >= v.0 {
+                result.extend(&v.1);
+                i = i - v.0;
+            }
+        }
+
+
+        RomanNumber(result)
     }
 }
