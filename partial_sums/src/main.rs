@@ -1,13 +1,13 @@
 pub fn parts_sums(arr: &[u64]) -> Vec<u64> {
-    let mut sums = vec![0; arr.len() + 1];
-    
-    for i in 0..arr.len() {
-        sums[i + 1] = sums[i] + arr[i];
-    }
-    
-    sums.reverse();
+    let mut result : Vec<u64> = vec![0; arr.len() + 1];
 
-    sums
+    for i in 0..arr.len() {
+        result[i+1] = result[i] + arr[i];
+    }
+
+    result.reverse();
+
+    result
 }
 
 fn main() {
