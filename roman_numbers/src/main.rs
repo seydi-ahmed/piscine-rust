@@ -8,5 +8,3 @@ fn main() {
 	println!("{:?}", RomanNumber::from(45));
 	println!("{:?}", RomanNumber::from(0));
 }
-
-
