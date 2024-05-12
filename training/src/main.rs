@@ -15,9 +15,9 @@ pub fn str_function(a: String) -> (String, String) {
 }
 
 pub fn vec_function(b: Vec<i32>) -> (Vec<i32>, Vec<f64>) {
-    let bb : Vec<f64> = Vec::new();
+    let mut bb : Vec<f64> = Vec::new();
 
-    for elem in b {
+    for elem in b.clone() {
         let res = (elem as f64).abs().ln();
         bb.push(res);
     }
