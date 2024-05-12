@@ -1,26 +1,37 @@
-use std::collections::HashMap;
+pub struct One {
+    first_layer : Option<Two>,
+}
+pub struct Two {
+    second_layer : Option<Three>,
+}
+pub struct Three {
+    third_layer : Option<Four>,
+}
+pub struct Four {
+    fourth_layer : Option<u16>,
+}
 
-pub fn bigger(h: HashMap<&str, i32>) -> i32 {
-    let mut max : i32 = 0;
-
-    for (_, elem) in h {
-        if elem > max {
-            max = elem;
-        }
+impl One {
+    pub fn get_fourth_layer(&self) -> Option<u16> {
+        self.first_layer.as_ref()?.second_layer.as_ref()?.third_layer.as_ref()?.fourth_layer
     }
-
-
-    max
 }
 
 
 fn main() {
+    let a = One {
+        first_layer : Some(Two {
+            second_layer: Some(Three {
+                third_layer: Some(Four {
+                    fourth_layer: Some(1000)
+                })
+            })
+        })
+    };
 
-    let mut hash = HashMap::new();
-    hash.insert("Daniel", 122);
-    hash.insert("Ashley", 333);
-    hash.insert("Katie", 334);
-    hash.insert("Robert", 14);
-
-    println!("The biggest of the elements in the HashMap is {}", bigger(hash));
+    // output: 1000
+    println!("{:?}", match a.get_fourth_layer() {
+        Some(e) => e,
+        None => 0
+    })
 }
