@@ -1,21 +1,28 @@
-pub fn reverse_it(v: i32) -> String {
-    let res : i32;
-    let mut signe : String = "".to_string();
-
-    if v < 0 {
-        signe = "-".to_string();
-        res = v * (-1);
-    } else {
-        res = v;
-    }
-
-    let result : String = res.to_string().chars().rev().collect();
-    format!("{}{}{}", signe, result, res)
+fn inv_pyramid(v: String, i: u32) -> Vec<String> {
+    (1..=i as usize)
+        .chain((1..i as usize).rev())
+        .map(|j| format!("{}{}", " ".repeat(j), v.repeat(j)))
+        .collect()
 }
 
 
 
 fn main() {
-    println!("{}", reverse_it(123));
-    println!("{}", reverse_it(-123));
+    let a = inv_pyramid(String::from("#"), 1);
+    let b = inv_pyramid(String::from("a"), 2);
+    let c = inv_pyramid(String::from(">"), 5);
+    let d = inv_pyramid(String::from("&"), 8);
+
+    for v in a.iter() {
+        println!("{:?}", v);
+    }
+    for v in b.iter() {
+        println!("{:?}", v);
+    }
+    for v in c.iter() {
+        println!("{:?}", v);
+    }
+    for v in d.iter() {
+        println!("{:?}", v);
+    }
 }
