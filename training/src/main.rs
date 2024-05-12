@@ -1,38 +1,51 @@
-pub fn nbr_function(c: i32) -> (i32, f64, f64) {
-    (c, (c as f64).exp(), (c as f64).abs().ln())
-}
+pub fn capitalize_first(input: &str) -> String {
+    let mut res : String = String::new();
+    let mut i = 0;
 
-pub fn str_function(a: String) -> (String, String) {
-    let mut aa : String = String::new();
-
-    for elem in a.split_whitespace() {
-        let mut res : f64 = elem.parse().unwrap();
-        res = res.exp();
-        aa.push_str(&res.to_string());
-        aa.push_str(&" ".to_string());
-    }
-    (a, aa.trim().to_string())
-}
-
-pub fn vec_function(b: Vec<i32>) -> (Vec<i32>, Vec<f64>) {
-    let mut bb : Vec<f64> = Vec::new();
-
-    for elem in b.clone() {
-        let res = (elem as f64).abs().ln();
-        bb.push(res);
+    for elem in input.chars() {
+        if i == 0 {
+            res.push_str(&elem.to_uppercase().to_string());
+            i += 1;
+        } else {
+            res.push_str(&elem.to_string());
+        }
     }
 
-    (b, bb)
+    res
 }
+
+pub fn title_case(input: &str) -> String {
+    let mut res : String = String::new();
+
+    for elem in input.split_whitespace() {
+        res.push_str(&capitalize_first(elem));
+        res.push_str(&" ".to_string());
+    }
+
+    res.trim().to_string()
+}
+
+pub fn change_case(input: &str) -> String {
+    let mut res : String = String::new();
+
+    for elem in input.chars() {
+        if elem.is_uppercase() {
+            res.push_str(&elem.to_lowercase().to_string());
+        } else if elem.is_lowercase() {
+            res.push_str(&elem.to_uppercase().to_string());
+        } else {
+            res.push_str(&elem.to_string());
+        }
+    }
+
+    res
+}
+
 
 
 
 fn main() {
-    let a: i32 = 0;
-    let b = String::from("1 2 4 5 6");
-    let c = vec![1, 2, 4, 5];
-
-    println!("{:?}", nbr_function(a));
-    println!("{:?}", str_function(b));
-    println!("{:?}", vec_function(c));
+    println!("{}", capitalize_first("joe is missing"));
+    println!("{}", title_case("jill is leaving A"));
+    println!("{}",change_case("heLLo THere"));
 }
