@@ -77,10 +77,7 @@ impl Scalar for f64 {
     }
 }
 
-// use std::fmt;
-//use std::cmp::PartialEq;
-
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Matrix<T>(pub Vec<Vec<T>>);
 
 impl<T: Scalar<Item = T> + Clone> Matrix<T> {
@@ -100,13 +97,3 @@ impl<T: Scalar<Item = T> + Clone> Matrix<T> {
         matrix
     }
 }
-
-
-// use std::fmt;
-
-// impl<T: fmt::Debug> fmt::Debug for Matrix<T> {
-//     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-//         write!(f, "Matrix({:?})", self.0)
-//     }
-// }
-
