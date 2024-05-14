@@ -1,4 +1,3 @@
-// use core::ops::{Add , Sub , Mul};
 pub mod ops;
 use lalgebra_scalar::Scalar;
 
