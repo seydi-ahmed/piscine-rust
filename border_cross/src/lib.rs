@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 pub struct Car<'a> {
     pub plate_nbr: &'a str,
     pub model: &'a str,
@@ -5,6 +6,7 @@ pub struct Car<'a> {
     pub year: u32,
 }
 
+#[allow(dead_code)]
 pub struct Truck<'a> {
     pub plate_nbr: &'a str,
     pub model: &'a str,
@@ -20,7 +22,7 @@ pub trait Vehicle {
 
 impl Vehicle for Truck<'_> {
     fn model(&self) -> &str {
-        &self.model
+        self.model
     }
 
     fn year(&self) -> u32 {
@@ -30,7 +32,7 @@ impl Vehicle for Truck<'_> {
 
 impl Vehicle for Car<'_> {
     fn model(&self) -> &str {
-        &self.model
+        self.model
     }
 
     fn year(&self) -> u32 {
@@ -38,6 +40,6 @@ impl Vehicle for Car<'_> {
     }
 }
 
-pub fn all_models(list: Vec<Box<dyn Vehicle>>) -> Vec<String> {
-    list.iter().map(|vehicle| vehicle.model().to_string()).collect()
+pub fn all_models(list: Vec<&dyn Vehicle>) -> Vec<&str> {
+    list.iter().map(|v| v.model()).collect()
 }
