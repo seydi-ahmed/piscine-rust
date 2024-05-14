@@ -1,78 +1,73 @@
-pub trait Scalar: Sized {
-    type Item;
+use core::ops::{Add , Sub , Mul};
 
-    fn zero() -> Self::Item;
-    fn one() -> Self::Item;
+pub trait Scalar: Add<Self , Output= Self> + Sized + Sub<Self , Output= Self>  + Mul<Self , Output= Self> {
+
+    fn zero() -> Self;
+    fn one() -> Self;
 }
 
 impl Scalar for u32 {
-    type Item = u32;
 
-    fn zero() -> Self::Item {
+    fn zero() -> Self {
         0
     }
 
-    fn one() -> Self::Item {
+    fn one() -> Self {
         1
     }
 }
 
 impl Scalar for u64 {
-    type Item = u64;
 
-    fn zero() -> Self::Item {
+    fn zero() -> Self {
         0
     }
 
-    fn one() -> Self::Item {
+    fn one() -> Self {
         1
     }
 }
 
 impl Scalar for i32 {
-    type Item = i32;
 
-    fn zero() -> Self::Item {
+    fn zero() -> Self {
         0
     }
 
-    fn one() -> Self::Item {
+    fn one() -> Self {
         1
     }
 }
 
 impl Scalar for i64 {
-    type Item = i64;
 
-    fn zero() -> Self::Item {
+    fn zero() -> Self {
         0
     }
 
-    fn one() -> Self::Item {
+    fn one() -> Self {
         1
     }
 }
 
 impl Scalar for f32 {
-    type Item = f32;
 
-    fn zero() -> Self::Item {
+    fn zero() -> Self {
         0.0
     }
 
-    fn one() -> Self::Item {
+    fn one() -> Self {
         1.0
     }
 }
 
 impl Scalar for f64 {
-    type Item = f64;
 
-    fn zero() -> Self::Item {
+    fn zero() -> Self {
         0.0
     }
 
-    fn one() -> Self::Item {
+    fn one() -> Self {
         1.0
     }
 }

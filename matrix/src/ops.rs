@@ -1,7 +1,7 @@
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Matrix<T>(pub Vec<Vec<T>>);
+// #[derive(Debug, Clone, PartialEq, Eq)]
 
-use matrix::*;
+use crate::{Matrix, Scalar};
+use std::ops::{ Add, Sub };
 
 
 impl<T: Scalar + Clone + std::ops::Add<Output = T>> Add for Matrix<T> {
