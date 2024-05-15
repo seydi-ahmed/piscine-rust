@@ -1,39 +1,46 @@
-pub fn rot21(input: &str) -> String {
-    let mut res : String = String::new();
+#[derive(Debug, Clone, Eq, PartialEq)]
+pub struct Matrix(pub Vec<Vec<i32>>);
 
-    for letter in input.chars(){
-        if letter >= 'a' && letter <= 'z'{
-            let letter_to_pushed = rotate_lowercase(letter, 21);
-            res.push_str(&letter_to_pushed.to_string());
-        } else if letter >= 'A' && letter <= 'Z'{
-            let letter_to_pushed = rotate_uppercase(letter, 21);
-            res.push_str(&letter_to_pushed.to_string());
-        } else {
-            res.push_str(&letter.to_string());
+impl Matrix {
+    pub fn new(slice: &[&[i32]]) -> Self {
+        let mut matrix = Vec::new();
+
+        for row in slice {
+            matrix.push(row.to_vec());
         }
+
+        Matrix(matrix)
+
     }
-
-    res
 }
 
-pub fn rotate_lowercase(c: char, shift: u8) -> char {
-    let base = b'a';
-    let c_rotated = ((c as u8 - base + shift) % 26) + base;
-    c_rotated as char
-}
+use std::fmt;
 
-pub fn rotate_uppercase(c: char, shift: u8) -> char {
-    let base = b'A';
-    let c_rotated = ((c as u8 - base + shift) % 26) + base;
-    c_rotated as char
+impl fmt::Display for Matrix {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        for (i_self, test) in self.0.iter().enumerate() {
+            write!(f, "(")?;
+
+            for (i_sous_test, &sous_test) in test.iter().enumerate() {
+                write!(f, "{}", sous_test)?;
+                if i_sous_test != test.len()-1 {
+                    write!(f, " ")?;
+                }
+            }
+
+            write!(f, ")")?;
+                if i_self != self.0.len()-1 {
+                    write!(f, "\n")?;
+                }
+
+        }
+        Ok(())
+    }
 }
 
 // ***************************************************************************
 
 fn main() {
-    println!("The letter \"a\" becomes: {}", rot21("a"));
-    println!("The letter \"m\" becomes: {}", rot21("m"));
-    println!("The word \"MISS\" becomes: {}", rot21("MISS"));
-    println!("Your cypher wil be: {}", rot21("Testing numbers 1 2 3"));
-    println!("Your cypher wil be: {}", rot21("rot21 works!"));
+    let matrix = Matrix::new(&[&[1, 2, 3], &[4, 5, 6], &[7, 8, 9]]);
+    println!("{}", matrix);
 }
