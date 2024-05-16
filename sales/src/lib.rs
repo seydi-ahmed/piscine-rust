@@ -11,8 +11,8 @@ impl Store {
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Cart {
-    items: Vec<(String, f32)>,
-    receipt: Vec<f32>,
+    pub items: Vec<(String, f32)>,
+    pub receipt: Vec<f32>,
 }
 
 impl Cart {
@@ -58,7 +58,7 @@ impl Cart {
         self.receipt.clone()
     }
 
-    pub fn get_receipt(&self) -> &[f32] {
-        &self.receipt
-    }
+    // pub fn get_receipt(&self) -> &[f32] {
+    //     &self.receipt
+    // }
 }
