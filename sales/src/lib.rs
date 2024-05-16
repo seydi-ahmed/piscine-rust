@@ -11,8 +11,8 @@ impl Store {
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Cart {
-    pub items: Vec<(String, f32)>,
-    pub receipt: Vec<f32>,
+    items: Vec<(String, f32)>,
+    receipt: Vec<f32>,
 }
 
 impl Cart {
@@ -24,41 +24,35 @@ impl Cart {
     }
 
     pub fn insert_item(&mut self, store: &Store, ele: String) {
-        if let Some((_, price)) = store.products.iter().find(|&&(ref name, _)| name == &ele) {
-            self.items.push((ele, *price));
+        if let Some(item) = store.products.iter().find(|(name, _)| name == &ele) {
+            self.items.push(item.clone());
         }
     }
 
     pub fn generate_receipt(&mut self) -> Vec<f32> {
-        let mut sorted_prices: Vec<f32> = self.items.iter().map(|&(_, price)| price).collect();
-        sorted_prices.sort_by(|a, b| b.partial_cmp(a).unwrap());
+        // Sort items by price in ascending order
+        self.items.sort_by(|(_, price1), (_, price2)| price1.partial_cmp(price2).unwrap());
 
-        let mut discounted_prices: Vec<f32> = Vec::new();
-        let mut counter = 0;
-        let mut total_discounted = 0.0;
+        // Apply the "buy three, get one free" promotion
+        let mut adjusted_prices = Vec::new();
+        let mut count = 0;
 
-        for price in sorted_prices {
-            counter += 1;
-            discounted_prices.push(price);
-            total_discounted += price;
-            if counter == 3 {
-                discounted_prices.pop();
-                total_discounted -= price;
-                counter = 0;
+        for (name, price) in &self.items {
+            adjusted_prices.push(*price);
+            count += 1;
+
+            // Check if three items have been added
+            if count == 3 {
+                // Adjust the price of the cheapest item to zero
+                adjusted_prices[adjusted_prices.len() - 3] = 0.0;
+                count = 0; // Reset the count for the next three items
             }
         }
 
-        let reduction_factor = total_discounted / self.items.iter().map(|&(_, price)| price).sum::<f32>();
-        self.receipt = self
-            .items
-            .iter()
-            .map(|&(_, price)| (price * reduction_factor * 100.0).round() / 100.0)
-            .collect();
+        // Update receipt field
+        self.receipt = adjusted_prices.clone();
 
-        self.receipt.clone()
+        // Return adjusted prices
+        adjusted_prices
     }
-
-    // pub fn get_receipt(&self) -> &[f32] {
-    //     &self.receipt
-    // }
 }

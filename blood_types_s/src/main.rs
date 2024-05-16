@@ -19,54 +19,52 @@ pub struct BloodType {
 }
 
 impl BloodType {
-    pub fn can_receive_from(&self, other: &Self) -> bool {
+	pub fn can_receive_from(&self, other: &Self) -> bool {
         match (&self.antigen, &other.antigen) {
-            (&Antigen::A, &Antigen::A) | (&Antigen::A, &Antigen::O) |
-            (&Antigen::B, &Antigen::B) | (&Antigen::B, &Antigen::O) |
-            (&Antigen::AB, _) |
-            (&Antigen::O, &Antigen::O)
+            (&Antigen::A, &Antigen::A) | (&Antigen::A, &Antigen::O) | (&Antigen::B, &Antigen::B) |
+            (&Antigen::B, &Antigen::O) | (&Antigen::O, &Antigen::O) | (&Antigen::AB, _)
             if self.rh_factor == RhFactor::Positive || self.rh_factor == other.rh_factor => true,
-            _ => false,
+            _ => false
         }
-    }
+	}
 
-    pub fn donors(&self) -> Vec<Self> {
+	pub fn donors(&self) -> Vec<Self> {
         let mut donors = Vec::<Self>::new();
-        for antigen in &[Antigen::O, Antigen::A, Antigen::B, Antigen::AB] {
+
+        for antigen in &[Antigen::A, Antigen::B, Antigen::AB, Antigen::O] {
             for rh_factor in &[RhFactor::Positive, RhFactor::Negative] {
                 let donor = BloodType {
                     antigen: antigen.clone(),
-                    rh_factor: rh_factor.clone(),
+                    rh_factor: rh_factor.clone()
                 };
-                if self.can_receive_from(&donor) {
+                if self.can_receive_from(&donor){
                     donors.push(donor);
                 }
             }
         }
-        donors
-    }
 
-    pub fn recipients(&self) -> Vec<BloodType> {
-        let mut recipients = Vec::<Self>::new();
-        for antigen in &[Antigen::O, Antigen::A, Antigen::B, Antigen::AB] {
+        return donors;
+	}
+
+	pub fn recipients(&self) -> Vec<Self> {
+        let mut donors = Vec::<Self>::new();
+
+        for antigen in &[Antigen::A, Antigen::B, Antigen::AB, Antigen::O] {
             for rh_factor in &[RhFactor::Positive, RhFactor::Negative] {
-                let recipient = BloodType {
+                let donor = BloodType {
                     antigen: antigen.clone(),
-                    rh_factor: rh_factor.clone(),
+                    rh_factor: rh_factor.clone()
                 };
-                if recipient.can_receive_from(self) {
-                    recipients.push(recipient);
+                if donor.can_receive_from(self){
+                    donors.push(donor);
                 }
             }
         }
-        recipients
-    }
+
+        return donors;
+	}
 }
 
-
-// *******************************************************************
-// *******************************************************************
-// *******************************************************************
 
 fn main() {
 	let blood_type = BloodType {
