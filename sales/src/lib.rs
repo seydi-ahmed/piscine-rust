@@ -43,15 +43,18 @@ impl Cart {
         let mut prices: Vec<f32> = self.items.iter().map(|(_, price)| *price).collect();
         prices.sort_by(|a, b| a.partial_cmp(b).unwrap());
 
-        let mut total_discount = 0.0;
-        for chunk in prices.chunks_exact(3) {
-            total_discount += chunk[0];
-        }
+        let total_discount: f32 = prices
+            .chunks_exact(3)
+            .map(|chunk| chunk[0])
+            .sum();
 
-        let _total_price: f32 = prices.iter().sum();
-        let adjustment = total_discount / prices.len() as f32;
+        let total_price: f32 = prices.iter().sum();
+        let adjustment = total_discount / total_price;
 
-        self.receipt = prices.iter().map(|&price| (price - adjustment).round_to(2)).collect();
+        self.receipt = prices
+            .iter()
+            .map(|&price| (price - price * adjustment).round_to(2))
+            .collect();
         self.receipt.clone()
     }
 }
