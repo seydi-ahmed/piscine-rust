@@ -57,4 +57,8 @@ impl Cart {
 
         self.receipt.clone()
     }
+
+    pub fn get_receipt(&self) -> &[f32] {
+        &self.receipt
+    }
 }
