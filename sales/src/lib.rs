@@ -7,22 +7,12 @@ impl Store {
     pub fn new(products: Vec<(String, f32)>) -> Store {
         Store { products }
     }
-
-    pub fn get_price(&self, product_name: &str) -> Option<f32> {
-        self.products.iter().find_map(|(name, price)| {
-            if name == product_name {
-                Some(*price)
-            } else {
-                None
-            }
-        })
-    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Cart {
-    pub items: Vec<(String, f32)>,
-    pub receipt: Vec<f32>,
+    items: Vec<(String, f32)>,
+    receipt: Vec<f32>,
 }
 
 impl Cart {
@@ -33,39 +23,38 @@ impl Cart {
         }
     }
 
-    pub fn insert_item(&mut self, store: &Store, item_name: String) {
-        if let Some(price) = store.get_price(&item_name) {
-            self.items.push((item_name, price));
+    pub fn insert_item(&mut self, store: &Store, ele: String) {
+        if let Some((_, price)) = store.products.iter().find(|&&(ref name, _)| name == &ele) {
+            self.items.push((ele, *price));
         }
     }
 
     pub fn generate_receipt(&mut self) -> Vec<f32> {
-        let mut prices: Vec<f32> = self.items.iter().map(|(_, price)| *price).collect();
-        prices.sort_by(|a, b| a.partial_cmp(b).unwrap());
+        let mut sorted_prices: Vec<f32> = self.items.iter().map(|&(_, price)| price).collect();
+        sorted_prices.sort_by(|a, b| b.partial_cmp(a).unwrap());
 
-        let total_discount: f32 = prices
-            .chunks_exact(3)
-            .map(|chunk| chunk[0])
-            .sum();
+        let mut discounted_prices: Vec<f32> = Vec::new();
+        let mut counter = 0;
+        let mut total_discounted = 0.0;
 
-        let total_price: f32 = prices.iter().sum();
-        let adjustment = total_discount / total_price;
+        for price in sorted_prices {
+            counter += 1;
+            discounted_prices.push(price);
+            total_discounted += price;
+            if counter == 3 {
+                discounted_prices.pop();
+                total_discounted -= price;
+                counter = 0;
+            }
+        }
 
-        self.receipt = prices
+        let reduction_factor = total_discounted / self.items.iter().map(|&(_, price)| price).sum::<f32>();
+        self.receipt = self
+            .items
             .iter()
-            .map(|&price| (price - price * adjustment).round_to(2))
+            .map(|&(_, price)| (price * reduction_factor * 100.0).round() / 100.0)
             .collect();
+
         self.receipt.clone()
-    }
-}
-
-trait RoundTo {
-    fn round_to(&self, digits: u32) -> f32;
-}
-
-impl RoundTo for f32 {
-    fn round_to(&self, digits: u32) -> f32 {
-        let factor = 10_f32.powi(digits as i32);
-        (self * factor).round() / factor
     }
 }
