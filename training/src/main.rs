@@ -1,4 +1,3 @@
-use std::rc::Rc;
 use std::cell::{RefCell, Cell};
 
 #[derive(Debug, Default, Clone, Eq, PartialEq)]
@@ -11,20 +10,20 @@ impl Workers {
     pub fn new() -> Workers {
         Workers {
             drops : Cell::new(0),
-            states : RefCell::new(Vec::new()),
+            states : RefCell::new(Vec::new())
         }
     }
-
+    
     pub fn new_worker(&self, c: String) -> (usize, Thread) {
         let id = self.track_worker();
         self.states.borrow_mut().push(false);
         (id, Thread::new_thread(id, c, self))
     }
-
+    
     pub fn track_worker(&self) -> usize {
         self.states.borrow().len()
     }
-
+    
     pub fn is_dropped(&self, id: usize) -> bool {
         *self.states.borrow().get(id).unwrap_or(&true)
     }
@@ -35,35 +34,39 @@ impl Workers {
             panic!("{} is already dropped", id);
         } else {
             states[id] = true;
-            self.drops.set(self.drops.get() + 1)
+            self.drops.set(self.drops.get() + 1);
         }
     }
 }
 
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub struct Thread<'a> {
-    pid : usize,
-    cmd : String,
-    parent : &'a Workers
+    p: usize,
+    c: String,
+    t: &'a Workers
 }
 
 impl<'a> Thread<'a> {
     pub fn new_thread(p: usize, c: String, t: &'a Workers) -> Thread {
         Thread {
-            pid : p,
-            cmd : c,
-            parent : t
+            p: p,
+            c: c,
+            t: t
         }
     }
-    
+
     pub fn skill(self) {
-        self.parent.add_drop(self.pid)
+        self.t.add_drop(self.p);
     }
 }
 
 
-// **************************************************
+// ***************************************************************************
+// ***************************************************************************
+// ***************************************************************************
+// ***************************************************************************
 
+use std::rc::Rc;
 
 fn main() {
     let worker = Workers::new();
