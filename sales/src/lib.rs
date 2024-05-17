@@ -1,3 +1,6 @@
+use core::f32;
+use std::vec;
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct Store {
     pub products: Vec<(String, f32)>,
@@ -11,48 +14,48 @@ impl Store {
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Cart {
-    items: Vec<(String, f32)>,
-    receipt: Vec<f32>,
+    pub items: Vec<(String, f32)>,
+    pub receipt: Vec<f32>,
 }
 
 impl Cart {
     pub fn new() -> Cart {
         Cart {
-            items: Vec::new(),
-            receipt: Vec::new(),
+            items: vec![],
+            receipt: vec![],
         }
     }
 
-    pub fn insert_item(&mut self, store: &Store, ele: String) {
-        if let Some(item) = store.products.iter().find(|(name, _)| name == &ele) {
-            self.items.push(item.clone());
+    pub fn insert_item(&mut self, s: &Store, ele: String) {
+        match s.products.iter().find(|x| x.0 == ele) {
+            Some(e) => self.items.push((ele, e.1)),
+            None => todo!(),
         }
     }
 
     pub fn generate_receipt(&mut self) -> Vec<f32> {
-        // Sort items by price in ascending order
-        self.items.sort_by(|(_, price1), (_, price2)| price1.partial_cmp(price2).unwrap());
+        let l = self.items.len();
+        let items: Vec<f32> = self.items.iter().map(|e| e.1).collect();
+        let mut cp = items.clone();
 
-        // Apply the "buy three, get one free" promotion
-        let mut adjusted_prices = Vec::new();
-        let mut count = 0;
+        if l < 3 {
+            return items;
+        } else {
+            // somme total
+            let sum1: f32 = cp.iter().sum();
+            cp.sort_by(|a, b| a.partial_cmp(b).unwrap());
 
-        for (name, price) in &self.items {
-            adjusted_prices.push(*price);
-            count += 1;
+            // la somme des articles offerts
+            let sum2: f32 = cp[0..l / 3].iter().sum();
 
-            // Check if three items have been added
-            if count == 3 {
-                // Adjust the price of the cheapest item to zero
-                adjusted_prices[adjusted_prices.len() - 3] = 0.0;
-                count = 0; // Reset the count for the next three items
-            }
+            let percentage = (sum2 / sum1) * 100.0;
+            let apply_percentage = |x| {
+                let f: f32 = x - x * percentage / 100.0;
+                (f * 100.0).round() / 100.0
+            };
+            let res: Vec<f32> = cp.iter().map(apply_percentage).collect();
+            self.receipt = res.clone();
+            res
         }
-
-        // Update receipt field
-        self.receipt = adjusted_prices.clone();
-
-        // Return adjusted prices
-        adjusted_prices
     }
 }

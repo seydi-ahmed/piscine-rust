@@ -1,14 +1,34 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
+#[derive(Debug, Clone)]
+pub struct Numbers<'a> {
+    numbers: &'a [u32],
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+impl<'a> Numbers<'a> {
+    pub fn new(numbers: &'a [u32]) -> Self {
+        Numbers { numbers }
+    }
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+    pub fn list(&self) -> &[u32] {
+        &self.numbers[0..]
+    }
+
+    pub fn latest(&self) -> Option<u32> {
+        self.numbers.iter().last().copied()
+    }
+
+    pub fn highest(&self) -> Option<u32> {
+        self.numbers.iter().max().copied()
+    }
+
+    pub fn highest_three(&self) -> Vec<u32> {
+        let mut cp: Vec<u32> = Vec::new();
+        for i in self.numbers {
+            cp.push(*i);
+        }
+        cp.sort_by(|a, b| b.cmp(a));
+        if cp.len() < 3 {
+            return cp.to_vec();
+        }
+        cp[0..3].to_vec()
     }
 }

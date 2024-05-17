@@ -1,14 +1,11 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
+pub fn add_curry(arg: i32) -> impl Fn(i32) -> i32 {
+    move |x| arg + x
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+pub fn twice<T,F>(f: F) -> impl Fn(T) -> T
+where
+    F: Fn(T) -> T,
+    T: Copy
+ {
+    move |x| f(f(x))
+ }
